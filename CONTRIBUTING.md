@@ -35,7 +35,7 @@ cd sigmoid-article-repo
 4. Include a README.md file in the same folder that provides instructions for using any accompanying source code and a brief summary of the article.
 
 
- Example: For guidance, follow the structure of the `article-example_topic folder` as an example.
+ Example: For guidance, follow the structure of the `article-example_topic` folder as an example.
 |-----------------------------------|
 
 ### Adding Source Code
