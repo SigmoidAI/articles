@@ -6,8 +6,7 @@ Welcome to the Sigmoid NGO's Article Repository. This repository contains a coll
 
 1. [Introduction](#introduction)
 2. [Articles](#articles)
-    - [Article 1: Title](./article-1)
-    - [Article 2: Title](./article-2)
+    - [Article 1: Example Topic](./article-example_topic)
     - ...
 3. [Contributing](#contributing)
 4. [License](#license)
@@ -18,31 +17,19 @@ At Sigmoid NGO, we are committed to sharing knowledge and fostering innovation. 
 
 ## Articles
 
-### Article 1: Title
+### Article 1: example_topic
 
-- **Author:** [Author Name](https://github.com/author-name)
-- **Folder:** [article-1](./article-1)
+- **Author:** [Eduard Balamatiuc](https://github.com/pyramixofficial)
+- **Folder:** [article-example_topic](./article-example_topic)
 
-Description of the article and its significance.
-
-#### Contents
-
-1. [Article](./article-1/article.md)
-2. [Source Code](./article-1/source-code/)
-3. [Instructions](./article-1/README.md)
-
-### Article 2: Title
-
-- **Author:** [Author Name](https://github.com/author-name)
-- **Folder:** [article-2](./article-2)
-
-Description of the article and its significance.
+This is an example article to be utilized for guidance when contributing to this repository. It contains the structure and format that should be followed when adding new articles.
 
 #### Contents
 
-1. [Article](./article-2/article.md)
-2. [Source Code](./article-2/source-code/)
-3. [Instructions](./article-2/README.md)
+1. [Article](./article-example_topic/article.md)
+2. [Source Code](./article-example_topic/src/)
+3. [Instructions](./article-example_topic/README.md)
+
 
 <!-- Add more articles following the same structure -->
 
