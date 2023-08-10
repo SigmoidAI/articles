@@ -19,6 +19,14 @@ Thank you for considering contributing to the Sigmoid NGO Article Repository! We
 ```
 # Click the "Fork" button at the top right corner of this repository to create your own copy.
 ```
+### Clone the Fork
+
+Clone your forked repository to your local machine:
+
+```sh
+git clone https://github.com/your-username/sigmoid-article-repo.git
+cd sigmoid-article-repo
+```
 
 ### Writing Articles
 1. Create a new folder for your article using a meaningful name (e.g., article-the_topic).
