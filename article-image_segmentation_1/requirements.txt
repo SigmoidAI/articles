@@ -1,0 +1,8 @@
+matplotlib==3.7.2
+numpy==1.25.2
+opencv_python==4.8.0.74
+scipy==1.11.1
+scikit-image==0.21.0
+IPython==8.14.0
+jupyter_client==8.3.0
+jupyter_core==5.3.1

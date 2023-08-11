@@ -6,12 +6,12 @@ Image segmentation is a fundamental problem in the field of computer vision, aim
 
 ## Getting Started
 
-Follow these steps to get started with the project:
+For this project, we will be using Python 3.11.3. Follow these steps to get started:
 
-1. **Install Requirements**: Install the required packages by executing the following command:
+1. **Install Requirements**: Install the required packages from the `requirements.txt` file using the following command:
 
    ```sh
-   pip install opencv-python scikit-image scipy numpy matplotlib
+   pip install -r requirements.txt
    ```
 
 2. **Run the Jupyter Notebook in your code editor**: Run the `main.ipynb` file in your code editor to see the examples in action.
