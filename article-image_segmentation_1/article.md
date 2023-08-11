@@ -1,7 +1,8 @@
 # Image Segmentation (Part 1)
 
 ![Article Image](images/cover.png)
-Source: [https://www.telusinternational.com/insights/ai-data/article/guide-to-image-segmentation](https://www.telusinternational.com/insights/ai-data/article/guide-to-image-segmentation)
+
+*Source: [https://www.telusinternational.com/insights/ai-data/article/guide-to-image-segmentation](https://www.telusinternational.com/insights/ai-data/article/guide-to-image-segmentation)*
 
 ## Table of contents
 
@@ -32,7 +33,8 @@ pip install opencv-python scikit-image scipy numpy matplotlib
 Before delving into computer-based techniques for image segmentation, it is essential to acknowledge that the human approach to segmentation is subjective and intuitive, guided by Gestalt principles such as similarity, proximity, closure, and continuity (Figure 1). This subjectivity makes segmentation an ill-defined problem, as it heavily relies on the project's goals and human perception, which can be influenced by past experiences and biases.
 
 ![Gestalt Principles](images/gestalt_principles.png)
-Figure 1. Gestalt Principles. Source: [https://uxhints.com/visual-ui-design/gestalt-principles/](https://uxhints.com/visual-ui-design/gestalt-principles/)
+
+*Figure 1. Gestalt Principles. Source: [https://uxhints.com/visual-ui-design/gestalt-principles/](https://uxhints.com/visual-ui-design/gestalt-principles/)*
 
 Translating these intuitive human intuitions into algorithms is indeed challenging. Currently, there are two main approaches to image segmentation:
 
@@ -55,10 +57,10 @@ Image segmentation tasks can be classified based on the amount and type of infor
 | Panoptic Segmentation | Combine Instance and Semantic Segmentation   | An image and some instance and semantic target classes | Pixel-perfect segmentation map of the whole image AND a bounding box and a segmentation mask for each instance of target classes |
 
 |       ![Original Image](images/street_og.png)        | ![Semantic Segmentation](images/street_semantic.png) |
-| :--------------------------------------------------: | :--------------------------------------------------: |
-|                  **Original Image**                  |              **Semantic Segmentation**               |
+| :-------------------------------------------------:  | :--------------------------------------------------: |
+|                  *Original Image*                    |              *Semantic Segmentation*                 |
 | ![Instance Segmentation](images/street_instance.png) | ![Panoptic Segmentation](images/street_panoptic.png) |
-|              **Instance Segmentation**               |              **Panoptic Segmentation**               |
+|              *Instance Segmentation*                 |              *Panoptic Segmentation*                 |
 
 Each segmentation type possesses distinct traits and finds relevance in diverse applications. In the subsequent section, we will explore some common image segmentation techniques with examples, showcasing their respective strengths and weaknesses.
 
@@ -67,8 +69,8 @@ Each segmentation type possesses distinct traits and finds relevance in diverse 
 Over the years, the field of image segmentation has witnessed the development of various techniques, broadly classified into two main categories: traditional methods and deep learning approaches, as depicted in Figure 3. While both categories offer valuable insights, this article will focus exclusively on traditional techniques. The discussion of deep learning methods will follow in Part 2.
 
 ![Image Segmentation Techniques](images/techniques.png)
-Figure 3. Image Segmentation Techniques.
-(I coded this diagram using Mermaid; could it be designed by someone in the design team?)
+
+*Figure 3. Image Segmentation Techniques. (I coded this diagram using Mermaid; could it be designed by someone in the design team?)*
 
 ### Traditional Techniques <a id="traditional"></a>
 
@@ -81,7 +83,8 @@ The most straightforward approach to image segmentation is known as the threshol
 In the context of [low-noise](https://en.wikipedia.org/wiki/Image_noise) images, a constant threshold value (T) can be utilized. However, dynamic thresholds may be required in certain scenarios. In this section, we will explore the implementation of thresholding using OpenCV, illustrating its practical application with an example image (Figure 4).
 
 ![Original Image](images/th_img.jpeg)
-Figure 4. Source: [Unsplash](https://unsplash.com/photos/f8PQ7fZVHNs?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)
+
+*Figure 4. Source: [Unsplash](https://unsplash.com/photos/f8PQ7fZVHNs?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)*
 
 Let's begin by importing the necessary libraries and loading the image:
 
@@ -157,7 +160,8 @@ To gain deeper insights into the thresholding process, we can analyze the image 
 The peaks typically correspond to prominent regions in the image, while the valleys indicate areas with lower pixel intensity variations. These peaks and valleys are critical in determining an optimal threshold value that effectively separates the foreground objects from the background, as shown in Figure 5.
 
 ![Threshold values in an image histogram](images/th_value_hist.png)
-Figure 5. Threshold values in an image histogram. Source: [https://www.cs.auckland.ac.nz/courses/compsci773s1c/lectures/ImageProcessing-html/topic3.htm](https://www.cs.auckland.ac.nz/courses/compsci773s1c/lectures/ImageProcessing-html/topic3.htm)
+
+*Figure 5. Threshold values in an image histogram. Source: [https://www.cs.auckland.ac.nz/courses/compsci773s1c/lectures/ImageProcessing-html/topic3.htm](https://www.cs.auckland.ac.nz/courses/compsci773s1c/lectures/ImageProcessing-html/topic3.htm)*
 
 The valley that lies between two overlapping peaks serves as a threshold, dividing their primary parts. Yet, this division unavoidably leads to the inclusion or exclusion of certain pixels with intermediate signals. The most suitable threshold, which minimizes the expected occurrences of both false inclusions and exclusions, might not align with the lowest point in the valley between the two peaks. This problem could be solved using adaptive thresholding, which is discussed further in the article. Until then, we could plot the histogram of our selected image:
 
@@ -184,7 +188,8 @@ Besides the manual selection of the global threshold, we can employ automated me
 Otsu's method starts by calculating the histogram of the input image, which represents the frequency distribution of pixel intensities. It then iterates through all possible threshold values, from the minimum to the maximum intensity, and computes the weighted variances of the two classes split by that threshold. The weighted variance represents the spread or dispersion of pixel intensities within each class, as shown in Figure 6.
 
 ![Otsu's Method Visualization](images/otsus_method.gif)
-Figure 6. Otsu’s Method Visualization. Source: [https://en.wikipedia.org/wiki/Otsu's_method](https://en.wikipedia.org/wiki/Otsu%27s_method)
+
+*Figure 6. Otsu’s Method Visualization. Source: [https://en.wikipedia.org/wiki/Otsu's_method](https://en.wikipedia.org/wiki/Otsu%27s_method)*
 
 The optimal threshold is determined as the value that maximizes the between-class variance. In other words, Otsu's method searches for the threshold that results in the most distinct separation between the two peaks in the histogram. The algorithm assumes that the image is bi-modal, meaning it has two distinct peaks in the intensity histogram corresponding to the foreground and background.
 
@@ -193,7 +198,8 @@ The optimal threshold is determined as the value that maximizes the between-clas
 The Triangle method is another approach for automatic thresholding in image segmentation. The general idea is that a a line is drawn from the maximum of the histogram to the last bin that contains any pixels. Then a perpendicular line is plotted to the histogram itself, and the distance to the histogram is maximized (Figure 7). The direction of the line depends upon whether the peak is toward the left or the right of the histogram. In other words, this method identifies the threshold that results in the most significant drop in pixel intensities from the histogram's peak value.
 
 ![Triangle Method](images/triangle_method.png)
-Figure 7. Triangle Method. Source: [https://dsp.stackexchange.com/questions/82545/how-to-binarize-an-image-using-the-triangle-method](https://dsp.stackexchange.com/questions/82545/how-to-binarize-an-image-using-the-triangle-method)
+
+*Figure 7. Triangle Method. Source: [https://dsp.stackexchange.com/questions/82545/how-to-binarize-an-image-using-the-triangle-method](https://dsp.stackexchange.com/questions/82545/how-to-binarize-an-image-using-the-triangle-method)*
 
 ###### Otsu's Method and the Triangle Method in OpenCV
 
@@ -218,6 +224,7 @@ plt.show()
 ```
 
 ![Otsu's Method and the Triangle Method](images/th_automated_output.png)
+
 As shown in the resulting images, Otsu's method produced a better result in this case. However, images typically possess considerable complexity, making global thresholding insufficient for effective segmentation.
 
 ##### 1.3. Adaptive thresholding
@@ -331,6 +338,7 @@ plt.show()
 ```
 
 ![Sobel Edge Detection](images/sobel.png)
+
 The result is a gradient magnitude image that highlights the edges in the original image.
 
 #### 3. Region-based Segmentation <a id="region_based"></a>
@@ -375,7 +383,7 @@ plt.show()
 
 ![Elevation Map](images/elevation_map.png)
 
-Next, let’s plot the the histogram of gray values to markers for the background and the coins based on the extreme parts of the plot. These markers will be used to guide the watershed transform.
+Next, let’s plot the histogram of gray values to markers for the background and the coins based on the extreme parts of the plot. These markers will be used to guide the watershed transform.
 
 ```python
 # Histogram
@@ -459,7 +467,8 @@ One of the widely used and intuitive clustering approaches for image segmentatio
 4.  **Re-assignment:** Repeat steps 2 and 3 until convergence (i.e., when the centroids do not change significantly).
 
 ![K-Means Clustering Visualization](images/clustering.gif)
-Figure 8. K-Means Clustering Visualization. Source: [https://www.pinterest.com/pin/81909286946202797/](https://www.pinterest.com/pin/81909286946202797/)
+
+*Figure 8. K-Means Clustering Visualization. Source: [https://www.pinterest.com/pin/81909286946202797/](https://www.pinterest.com/pin/81909286946202797/)*
 
 In Python, we can implement k-means clustering using `scikit-image` and `OpenCV`.
 
@@ -473,7 +482,8 @@ import matplotlib.pyplot as plt
 For this example, we will use the following picture:
 
 ![Image for Clustering](images/clustering_img.png)
-Figure 9. Source: [Unsplash](https://unsplash.com/photos/gKXKBY-C-Dk?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)
+
+*Figure 9. Source: [Unsplash](https://unsplash.com/photos/gKXKBY-C-Dk?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)*
 
 We begin by loading and preparing the image for clustering. The image is converted into a numpy array and reshaped into a 2D array of pixels and 3 color values (RGB).
 
@@ -531,6 +541,7 @@ plt.show()
 ```
 
 ![K-Means Clustering Results](images/clustering_output.png)
+
 The results demonstrate the impact of different K values on the segmentation. Higher K values preserve more details in the image, while lower values lead to a more simplified and abstract representation.
 
 ## Conclusion <a id="conclusion"></a>
