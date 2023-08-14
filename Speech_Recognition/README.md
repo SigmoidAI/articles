@@ -37,6 +37,11 @@ Follow these steps to get started with Speech Recognition:
     ```
 
 5. **Access the Application**: Open your web browser and navigate to `http://localhost:3000` to see your Speech_Recognition application in action.
+   
+6. **Install the SpeechRecognition library using pip**:
+   ```
+    pip install SpeechRecognition
+    ```
 
 ## Source Code Explanation
 
