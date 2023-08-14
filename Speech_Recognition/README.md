@@ -52,6 +52,8 @@ Follow these steps to get started with Speech Recognition:
 
 - `links`: This folder contains links used the article.
 
+## Remember !
+The "SpeechRecognition" library, which is commonly used for speech recognition in Python, is compatible with Python 3.x versions. It's recommended to use Python 3.3 or later when working with this library.
 
 ## Next Steps
 
