@@ -1,0 +1,1 @@
+#### This article provides a comprehensive look into the following Machine Translation evaluation methods: human rating, human ranking, HTER, BLEU, METEOR, METEOR-NEXT, COMET. 
