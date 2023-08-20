@@ -15,6 +15,7 @@ Today we will dive in discover one of the generative networks: Deep Belief Netwo
 6. [Use Cases](#use-cases)
 7. [Drawbacks and limits](#drawbacks-and-limits)
 8. [Conclusion](#conclusion)
+9. [References](#references)
 
 
 ## Introduction
@@ -99,7 +100,9 @@ and as input for the following one [4] . The joint distribution
 between the observed vector X and the hidden layers hk may be 
 expressed using the formula: 
 
+<p align="center">
 $P(x, h^1, ..., h^l) = (\displaystyle\prod^{l-2}_{k=0} P(h^k|h^{k + 1})P(h^{l - 1}, h^l))$
+</p>
 
 , where:
 * $X$ = $h_0$,
