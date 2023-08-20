@@ -6,6 +6,16 @@ classifying things into categories, and ending with pictures and music generatio
 everywhere. One of the most outstanding application of AI is stuff creation (a.k.a. generation). 
 Today we will dive in discover one of the generative networks: Deep Belief Network (DBN).
 
+## Content:
+1. [Introduction](#introduction)
+2. [What are Deep Belief Networks (DBNs)?](#what-are-deep-belief-networks-dbns)
+3. [DBNs Overview](#dbns-overview)
+4. [Math Base](#math-base)
+5. [DBNs Training](#dbns-training)
+6. [Use Cases](#use-cases)
+7. [Drawbacks and limits](#drawbacks-and-limits)
+8. [Conclusion](#conclusion)
+
 
 ## Introduction
 
@@ -21,9 +31,10 @@ DBNs, that will be discussed today, are a type of deep learning
 architecture that combine neural networks and unsupervised 
 learning.
 
-<div style="text-align: center">
+<p align="center">
     <img src="images/dbn_1.jpg" alt="Fast_Learning" style="width:300px;"/>
-</div>
+<br><em>Source: https://medium.com/swlh/what-are-rbms-deep-belief-networks-and-why-are-they-important-to-deep-learning-491c7de8937a</em>
+</p>
 
 ## What are Deep Belief Networks (DBNs)?
 
@@ -33,30 +44,32 @@ in an unsupervised manner. \
 &nbsp; &nbsp; &nbsp;A Restricted Boltzmann Machines is a generative unsupervised 
 model used for feature selection and feature reduction technique, 
 for dimensionality reduction, classification, regression, and 
-other tasks in Machine Learning and Deep Learning. It is 
+other tasks in Machine Learning and Deep Learning [1]. It is 
 learning on a probability distribution on a certain dataset 
 and uses the learnt distribution to come up with conclusions on 
 unexplored data. A typical RBM architecture is represented below 
 (where h represents hidden nodes and v – visible nodes).
 
-<div style="text-align: center">
+<p align="center">
     <img src="images/dbn_2.png" alt="RBM architecture" style="width:400px;"/>
-</div>
+<br><em>Source: https://www.javatpoint.com/keras-restricted-boltzmann-machine</em>
+</p>
 
 &nbsp; &nbsp; &nbsp;All RBMs that are a part of a Deep Belief Network, are trained in an 
-unsupervised manner, one at a time. Thus, the output of one of them 
+unsupervised manner, one at a time [2]. Thus, the output of one of them 
 becomes the input for the next one. The output of the final machine 
 is used either in classification or regression tasks, making the 
 general DBN architecture look like the one represented below. 
 The prior reason that lead to the appearance of DBNs is to create 
 unbiased values stored in leaf nodes and to avoid being stuck in 
-the local minima. 
+the local minima [3]. 
 
-<div style="text-align: center">
+<p align="center">
     <img src="images/dbn_3.jpg" alt="DBN architecture" style="width:400px;"/>
-</div>
+<br><em>Source: https://www.sciencedirect.com/topics/engineering/deep-belief-network</em>
+</p>
 
-## DBNs overview
+## DBNs Overview
 
 &nbsp;&nbsp;&nbsp;However, besides the Standard DBNs described earlier, there might be 
 distinguished several extensions that incorporate different 
@@ -76,17 +89,17 @@ sense, when multiple autoencoders are stacked, they form a deep
 architecture that shares a considerate amount of similarities 
 with Deep Belief Networks.
 
-## Math base
+## Math Base
 &nbsp;&nbsp;&nbsp;Despite the diversity of the existing DBNs, it shouldn’t be 
 forgotten the fact that all of the share similar “roots”. 
 Recall that DBN is a network assembled out of many single 
 networks. Except the first and last layers, others play dual 
 role serving at the same time as hidden layers that comes before 
-and as input for the following one [1] . The joint distribution 
+and as input for the following one [4] . The joint distribution 
 between the observed vector X and the hidden layers hk may be 
 expressed using the formula: 
 
-$P(x, h^1, ..., h^l) = (\displaystyle\prod^{l-2}_{k=0} P(h^k|h^{k + 1})P(h^{l - 1}, h^l)$
+$P(x, h^1, ..., h^l) = (\displaystyle\prod^{l-2}_{k=0} P(h^k|h^{k + 1})P(h^{l - 1}, h^l))$
 
 , where:
 * $X$ = $h_0$,
@@ -122,9 +135,10 @@ based on the gradients of the loss with respect to the parameters
 9. postprocessing – you might add some steps as tresholding or 
 normalization.
 
-<div style="text-align: center">
-    <img src="images/dbn_5.png" alt="RBM training" style="width:500px;"/>
-</div>
+<p align="center">
+    <img src="images/dbn_4.png" alt="RBM training" style="width:500px;"/>
+<br><em>Source: https://icecreamlabs.medium.com/deep-belief-networks-all-you-need-to-know-68aa9a71cc53</em>
+</p>
 
 ## Use Cases
 
@@ -174,12 +188,19 @@ to know about its existence. Not the last, it is just an awesome
 algorithm with a unique architecture that might bring you fun 
 while diving in!
 
-<div style="text-align: center">
-    <img src="images/dbn_6.jpg" alt="Closing image" style="width:500px;"/>
-</div>
+<p align="center">
+    <img src="images/dbn_5.jpg" alt="Closing image" style="width:500px;"/>
+<br><em>Source: https://www.123rf.com/photo_166564781_that-s-all-folks-vintage-movie-ending-screen-background-the-end-vector-illustration-.html</em>
+</p>
 
 
 ## References
-[1] - ABIRAMI S., CHITRA P., “The Digital Twin Paradigm for 
-Smarter Systems and Environments: The Industry Use Cases”, 
+[1] - MEDIUM, _What Are RBMs, Deep Belief Networks and Why Are They Important to Deep Learning?_.
+Article. [quoted 29.07.2023]. Access link:  https://medium.com/swlh/what-are-rbms-deep-belief-networks-and-why-are-they-important-to-deep-learning-491c7de8937a \
+[2] - JAVATPOINT, _Restricted Boltzmann Machine_. Article. [quoted 30.07.2023]. Access link: 
+https://www.javatpoint.com/keras-restricted-boltzmann-machine \
+[3] - AL-JABERY K. K., WUNSCH D. C., _Selected approaches to supervised learning_, 
+Computational Learning Approaches to Data Analytics in Biomedical Applications, 2020 \
+[4] - ABIRAMI S., CHITRA P., _The Digital Twin Paradigm for 
+Smarter Systems and Environments: The Industry Use Cases_, 
 Advances in Computers, 2020
