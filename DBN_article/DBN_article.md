@@ -22,7 +22,7 @@ architecture that combine neural networks and unsupervised
 learning.
 
 <div style="text-align: center">
-    <img src="dbn_1.jpg" alt="Fast_Learning" style="width:300px;"/>
+    <img src="images/dbn_1.jpg" alt="Fast_Learning" style="width:300px;"/>
 </div>
 
 ## What are Deep Belief Networks (DBNs)?
@@ -35,17 +35,17 @@ model used for feature selection and feature reduction technique,
 for dimensionality reduction, classification, regression, and 
 other tasks in Machine Learning and Deep Learning. It is 
 learning on a probability distribution on a certain dataset 
-and used the learnt distribution to come up with conclusions an 
+and uses the learnt distribution to come up with conclusions on 
 unexplored data. A typical RBM architecture is represented below 
-(where h represents hidden nodes and v – visible nodes). \
+(where h represents hidden nodes and v – visible nodes).
 
 <div style="text-align: center">
-    <img src="dbn_2.png" alt="RBM architecture" style="width:400px;"/>
+    <img src="images/dbn_2.png" alt="RBM architecture" style="width:400px;"/>
 </div>
 
-&nbsp; &nbsp; &nbsp;Coming back to DBNs, all RBMs it consists of, are trained in an 
-unsupervised manner, one at a time, the output of one of them 
-being the input for the next one. The output of the final machine 
+&nbsp; &nbsp; &nbsp;All RBMs that are a part of a Deep Belief Network, are trained in an 
+unsupervised manner, one at a time. Thus, the output of one of them 
+becomes the input for the next one. The output of the final machine 
 is used either in classification or regression tasks, making the 
 general DBN architecture look like the one represented below. 
 The prior reason that lead to the appearance of DBNs is to create 
@@ -53,7 +53,7 @@ unbiased values stored in leaf nodes and to avoid being stuck in
 the local minima. 
 
 <div style="text-align: center">
-    <img src="dbn_3.jpg" alt="DBN architecture" style="width:400px;"/>
+    <img src="images/dbn_3.jpg" alt="DBN architecture" style="width:400px;"/>
 </div>
 
 ## DBNs overview
@@ -71,7 +71,7 @@ recurrent connections or temporal dependencies between layers;
 modeling technique, variational interface, in DBMs, making 
 multiple layers of hidden units fully connected between 
 consecutive layers;
-* *Stacked Autoencoders -  although not a DBN in the traditional 
+* Stacked Autoencoders -  although not a DBN in the traditional 
 sense, when multiple autoencoders are stacked, they form a deep 
 architecture that shares a considerate amount of similarities 
 with Deep Belief Networks.
@@ -84,17 +84,15 @@ networks. Except the first and last layers, others play dual
 role serving at the same time as hidden layers that comes before 
 and as input for the following one [1] . The joint distribution 
 between the observed vector X and the hidden layers hk may be 
-expressed using the formula: \
+expressed using the formula: 
 
-<div style="text-align: center">
-    <img src="dbn_4.png" alt="Base formula" style="width:350px;"/>
-</div>
+$P(x, h^1, ..., h^l) = (\prod_{k = 0}^{l - 2}P(h^k|h^{k + 1})P(h^{l - 1}, h^l)$
 
 , where:
-* X = h_0,
-* P(h<sup>k</sup>|h<sup>k+1</sup>) – a conditional distribution for the visible units 
+* $X$ = h_0,
+* $P(h^k|h^{k + 1})$ – a conditional distribution for the visible units 
 conditioned on the hidden units of the RBM at level k,
-* P(h<sup>l-1</sup>, h<sup>l</sup>) – visible-hidden joint distribution in the top-level RBM.
+* $P(h^{l - 1}, h^l)$ – visible-hidden joint distribution in the top-level RBM.
 
 ## DBNs Training
 
@@ -125,7 +123,7 @@ based on the gradients of the loss with respect to the parameters
 normalization.
 
 <div style="text-align: center">
-    <img src="dbn_5.png" alt="RBM training" style="width:500px;"/>
+    <img src="images/dbn_5.png" alt="RBM training" style="width:500px;"/>
 </div>
 
 ## Use Cases
@@ -177,7 +175,7 @@ algorithm with a unique architecture that might bring you fun
 while diving in!
 
 <div style="text-align: center">
-    <img src="dbn_6.jpg" alt="Closing image" style="width:500px;"/>
+    <img src="images/dbn_6.jpg" alt="Closing image" style="width:500px;"/>
 </div>
 
 
