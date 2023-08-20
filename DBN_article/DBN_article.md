@@ -86,7 +86,7 @@ and as input for the following one [1] . The joint distribution
 between the observed vector X and the hidden layers hk may be 
 expressed using the formula: 
 
-$P(x, h^1, ..., h^l) = (\prod_{k=0}^{l-2} P(h^k|h^{k + 1})P(h^{l - 1}, h^l)$
+$P(x, h^1, ..., h^l) = (\displaystyle\prod^{l-2}_{k=0} P(h^k|h^{k + 1})P(h^{l - 1}, h^l)$
 
 , where:
 * $X$ = $h_0$,
