@@ -51,16 +51,11 @@ Follow these steps to get started with Speech Recognition:
 - `img/`: This folder contains images used the article.
 
 ## Links
-https://www.youtube.com/watch?v=JF8rlKuSoFM 
-- How Does the Human Body Produce Voice and Speech?
-https://www.youtube.com/watch?v=JARmZM4FH8Q
-Analog to Digital Converters | Digital Signal Processing 
-https://www.youtube.com/watch?v=G7XL-7rj45M
-Can you guess the song? Fourier Music Decomposition
-https://jonathan-hui.medium.com/speech-recognition-feature-extraction-mfcc-plp-5455f5a69dd9
-Speech Recognition - Feature Extraction MFCC & PLP
-https://www.youtube.com/watch?v=U0XtE4_QLXI
-A Basic Introduction to Speech Recognition (Hidden Markov Model & Neural Networks)
+[How Does the Human Body Produce Voice and Speech?](https://www.youtube.com/watch?v=JF8rlKuSoFM) <br/>
+[Analog to Digital Converters | Digital Signal Processing](https://www.youtube.com/watch?v=JARmZM4FH8Q) <br/>
+[Can you guess the song? Fourier Music Decomposition](https://www.youtube.com/watch?v=G7XL-7rj45M) <br/>
+[Speech Recognition - Feature Extraction MFCC & PLP](https://jonathan-hui.medium.com/speech-recognition-feature-extraction-mfcc-plp-5455f5a69dd9) <br/>
+[A Basic Introduction to Speech Recognition (Hidden Markov Model & Neural Networks)](https://www.youtube.com/watch?v=U0XtE4_QLXI)
 
 ## Remember !
 The "SpeechRecognition" library, which is commonly used for speech recognition in Python, is compatible with Python 3.x versions. It's recommended to use Python 3.3 or later when working with this library.
