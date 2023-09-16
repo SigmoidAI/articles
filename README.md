@@ -54,7 +54,9 @@ Let's first of all, understand how to deal with the YOLOv8 model.
 pip install ultralytics 
 # !pip install ultralytics for JUPYTER Notebook
 ```
+
 Then:
+
 ```
 from ultralytics import YOLO
 
@@ -70,7 +72,9 @@ results = model("people.jpg",show=True)
 # waitKey(1) will display a frame for 1 ms
 cv2.waitKey(0)
 ```
+
 Results obtained from YOLOv8x versionNow, since you understood the basics, let's go to the true object detection and tracking.
+
 ```
 import cv2
 from ultralytics import YOLO
