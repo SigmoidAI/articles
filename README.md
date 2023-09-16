@@ -1,18 +1,24 @@
 ---
 
 Video Object Tracking with Optical Flow and Yolo
-Original photo by Mak from UnsplashIntroduction
+
+Original photo by Mak from Unsplash
+
+Introduction
+
 Object Detection and Object Tracking is a quite useful thing for the modern world, especially when talking about solving real-life problems in fields associate with businesses (all of them) like agriculture, robotics, transportation and so on and so forth. This article is meant to make you familiar with the "Detection" and "Tracking" terms, and of course teach you how to implement this terms in code and visualizing.
 
 ---
 
 What is the difference between "Detection" and "Tracking"?
+
 When speaking about detecting an object, we limit ourselves to one frame, which means that the Objection Detection algorithm has to work with one picture, and ONLY detect a certain object/objects. Object Tracking is about the whole video. The algorithm needs to track one object across the entire video, thus making sure that this object is unique. This is the task for the tracker algorithms (DeepSort, Sort, Native CV2 Tracking Algorithms)[1].
 In general, we talk about certain ID's that are assigned to each object,the Kalman Filter (prediction of future position of the object) or even the Optical Flow (for tracking the moving objects). 
 
 ---
 
 Methods and Algorithms Used
+
 Okay, since we understood what is detection and tracking, we can move on to the methodology and some advanced techniques.
 Optical Flow
 Optical flow is the pattern of apparent motion of image objects between two consecutive frames caused by the movement of object or camera. It is 2D vector field where each vector is a displacement vector showing the movement of points from first frame to second .
@@ -37,9 +43,13 @@ Both YOLOv8 and SORT Algorithm are based on CNN (telling you this to move on exp
 ---
 
 Math Behind
+
 CNN's
+
 CNN structure [Source: Here ]So, CNN's or Convolutional Neural Networks are neural networks that are based on convolution layers and pooling layer. As it is written in A Comprehensive Guide to Convolutional Neural Networks - the ELI5 way, "The objective of the Convolution Operation is to extract the high-level features such as edges, from the input image", so to put it simply, convolution layers are extracting the most important features from the initial input. The pooling layer, on the other part, is the one that simplifies things or "is responsible for reducing the spatial size of the Convolved Feature". This process enables the machine to understand the features of the initial input. Therefore, we receive a complex feature learning process , where Convolutional and Pooling layers are stacked upon each other[4].
+
 Optical Flow Math
+
 Pixel movement between two consecutive frames is referred to as optical flow. Either the camera is moving or the scene is moving, depending on the motion.
 The fundamental goal of optical flow is to calculate the displacement vector of an object as a result of camera motions or the object's motion. In order to calculate the motion vectors of all image pixels or a sparse feature collection, our main objective is to determine their displacement.
 If we were to use a picture to illustrate the optical flow issue, it would look somewhat like this:
@@ -48,6 +58,7 @@ Optical Flow functions by defining a dense vector field and is a key component i
 ---
 
 Making it Real
+
 Object Tracking with YOLOv8 and SORT
 Let's first of all, understand how to deal with the YOLOv8 model.
 ```
