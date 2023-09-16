@@ -50,9 +50,12 @@ Optical Flow functions by defining a dense vector field and is a key component i
 Making it Real
 Object Tracking with YOLOv8 and SORT
 Let's first of all, understand how to deal with the YOLOv8 model.
+```
 pip install ultralytics 
 # !pip install ultralytics for JUPYTER Notebook
+```
 Then:
+```
 from ultralytics import YOLO
 
 # Assuming you have opencv installed
@@ -65,8 +68,10 @@ model = YOLO(MODEL)
 results = model("people.jpg",show=True) 
 # "0" will display the window infinitely until any keypress (in case of videos)
 # waitKey(1) will display a frame for 1 ms
-cv2.waitKey(0) 
+cv2.waitKey(0)
+```
 Results obtained from YOLOv8x versionNow, since you understood the basics, let's go to the true object detection and tracking.
+```
 import cv2
 from ultralytics import YOLO
 import math
@@ -83,7 +88,9 @@ from sort import *
 
 cap = cv2.VideoCapture("data/los_angeles.mp4")
 model =  YOLO("yolos/yolov8n.pt")
+```
 The cap variable will be the instance of the video that we are using and model, the instance of the YOLOv8 model.
+```
 classes = {0: 'person',
 1: 'bicycle',
 2: 'car', 
@@ -92,7 +99,9 @@ classes = {0: 'person',
 79: 'toothbrush'}
 
 result_array = [classes[i] for i in range(len(classes))]
+```
 Initially, the classes that you get from YOLOv8 API, are float numbers or class id's. Of course, each number has a name class attached to it. It is simpler to make a dict for this and then, if you need, to transform it into array (got to lazy to make it manually).
+```
 # Line coordinates (explain it later)
 l = [593,500,958,500] 
 
@@ -123,8 +132,10 @@ while True:
             conf = math.ceil((box.conf[0]*100))/100 
             
             # Class id (number)
-            cls = int(box.cls[0]) 
+            cls = int(box.cls[0])
+```
 That was the part where we detect every object. Now it's time to track and count every car on the road:
+```
 while True:
     _, frame = cap.read()
     results = model(frame,stream=True)
@@ -138,7 +149,9 @@ while True:
     
     tracks = tracker.update(detections) #sending our detections to the tracker func
     cv2.line(frame, (l[0],l[1]),(l[2],l[3]),color=(255,0,0),thickness=3) #line as a threshold
+```
 Now, I will create an array to store all of our detections. Next, I will send this array to the tracker function, where I will extract the unique IDs and bounding box coordinates (which are the same as the previous ones). The important detail is  the cv2.line instance: I am  generating a line using specific coordinates. If cars, identified by  certain IDs, traverse this line, the OVERALL count will increment. In  essence, we are establishing a car counter that operates according to  the car ID[6].
+```
 for result in tracks:
         x1,y1,x2,y2,id = result
         x1,y1,x2,y2 = int(x1),int(y1),int(x2),int(y2)
@@ -159,6 +172,7 @@ for result in tracks:
     m.write(frame)
     cv2.imshow("Image",frame)
     cv2.waitKey(1)
+```
 Now, onto the most interesting aspect: cx and cy are the coordinates for the center of the bounding box. By utilizing these values, we can determine whether the car has crossed the designated line or not (check out the code). If the car has indeed crossed the line, our next step involves verifying whether the ID assigned to this car is unique, thus indicating that the car has not crossed the line previously.
 Results
 
@@ -174,8 +188,11 @@ Dense Optical Flow
 
 While Dense Optical Flow, computes the optical flow for every pixel of the frame (which creates a image of only the objects that are moving), the Sparse Optical Flow, computes the flow vector of the main features of the objects. 
 Now let's take a look at the code for these:
+```
 flow = cv2.calcOpticalFlowFarneback(prevgray, gray, None, 0.5, 3, 15, 3, 5, 1.2, 0)
+```
 First of all, we need to calculate the Optical Flow. We can do that via the Open CV library, that already has this algorithm. Of course, don't forget to put this function in a while loop, so the algorithm will calculate the Optical Flow continously (The process of reading the video and manipulating with it is the same as in the  Object Tracking with Yolov8 and SORT subchapter)
+```
  def draw_flow(img, flow, step=16):
     # Get the height and width of the image
     h, w = img.shape[:2]
@@ -201,7 +218,9 @@ First of all, we need to calculate the Optical Flow. We can do that via the Open
         cv2.circle(img_bgr, (x1, y1), 1, (0, 255, 0), -1)
     
     return img_bgr
+```
 This is the def responsible for the Sparse Optical Flow. We just need to extract the points from image, transorm them in a flow vector and after that simply visualise them.
+```
 def draw_hsv(flow):
     # Get the height and width of the flow matrix
     h, w = flow.shape[:2]
@@ -232,6 +251,7 @@ def draw_hsv(flow):
     
     # Return the final BGR image with flow visualization
     return bgr
+```
 This is the def responsible for Dense Optical Flow. Here, this function converts the flow vectors into hues, so the final result will display only the moving pixels[7].
 Results
 
