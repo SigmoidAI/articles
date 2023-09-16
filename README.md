@@ -292,13 +292,21 @@ Conclusions
 In summary, object tracking stands as a versatile tool with applications spanning statistical analysis and everyday problem-solving. Its ability to provide data-driven insights aids strategic decision-making in business, while also simplifying routine tasks and enhancing personal convenience. As we embrace this technology, we unlock innovative solutions that bridge the gap between advanced analytics and practical solutions, enriching both our professional endeavors and daily lives.
 Thanks for reading!
 References
+
 [1] https://medium.com/red-buffer/want-object-tracking-try-deep-sort-47cb38e84c89
+
 [2] https://docs.opencv.org/3.4/d4/dee/tutorial_optical_flow.html
+
 [3] https://medium.com/red-buffer/want-object-tracking-try-deep-sort-47cb38e84c89
+
 [4] Convolutional Neural Networks Explained (CNN Visualized)
+
 [5] https://datahacker.rs/002-advanced-computer-vision-motion-estimation-with-optical-flow/
+
 [6] https://www.youtube.com/watch?v=WgPbbWmnXJ8&t=10512s&ab_channel=Murtaza%27sWorkshop-RoboticsandAI
+
 [7] https://www.youtube.com/watch?v=hfXMw2dQO4E
+
 [8] https://encord.com/blog/object-tracking-guide/#:~:text=DeepSORT%20is%20a%20well%2Dknown,is%20quite%20effective%20against%20occlusion.
 
 ---
