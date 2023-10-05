@@ -1,6 +1,3 @@
-# Python version
-The "SpeechRecognition" library, which is commonly used for speech recognition in Python, is compatible with Python 3.x versions. It's recommended to use Python 3.3 or later when working with this library.
-
-# Speech recognition libraries
+Python 3.3 
 pyaudio==0.2.11       
 SpeechRecognition==3.8.1  
