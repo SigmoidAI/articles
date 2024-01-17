@@ -21,13 +21,11 @@ The code in this folder provides basic examples of how object tracking works (ex
 
 - `src/tracking_with_yolo.py`: The .py file that contains the YOLO usage example.
 
-- `src/traffic_signs_tracking.py`: The .py file that contains an example of training and working with a dataset of images.
+- `src/traffic_signs_tracking.py`: The .py file that contains an example of working with a pretrained yolo.pt model.
 
 - `src/traffic_tracking.py`: A complex video object tracking example where with certain tools, I count the number of cars on the highway.
 
 - `src/runners_with_yolo.py`: A tracker for the runners on a competition.
-
-- `src/test.ipynb`: Training a model on a dataset of images
 
 - `src/runners_with_yolo.py`: A tracker for the runners on a competition.
 

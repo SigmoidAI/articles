@@ -3,11 +3,9 @@ from ultralytics import YOLO
 import math
 import cvzone
 from deep_sort_realtime.deepsort_tracker import DeepSort
-from sort import *
-#cap = cv2.VideoCapture(0) #for webcam
-# cap.set(3,1280)
-# cap.set(4,720)
+from utils.sort import *
 
+#for power_rangers.mp4 use this link https://www.youtube.com/watch?v=iBbepfFzAiM
 cap = cv2.VideoCapture("data/power_rangers.mp4")
 model =  YOLO("yolos/yolov8l.pt")
 
@@ -94,7 +92,7 @@ classes = {0: 'person',
 
 result_array = [classes[i] for i in range(len(classes))]
 
-mask = cv2.imread("r2.jpg")
+mask = cv2.imread("images/helper_images/r2.jpg")
 
 tracker = Sort(max_age=20, min_hits=2,iou_threshold=0.3)
 frame_width = int(cap.get(3))

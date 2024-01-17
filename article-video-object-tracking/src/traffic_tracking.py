@@ -3,8 +3,9 @@ from ultralytics import YOLO
 import math
 import cvzone
 from deep_sort_realtime.deepsort_tracker import DeepSort
-from sort import *
-#cap = cv2.VideoCapture(0) #for webcam
+from utils.sort import *
+
+# cap = cv2.VideoCapture(0) #for webcam
 # cap.set(3,1280)
 # cap.set(4,720)
 

@@ -3,8 +3,11 @@ from ultralytics import YOLO
 import math
 import cvzone
 import numpy as np
-cap = cv2.VideoCapture("data/redlight_greenlight.mp4")
-model =  YOLO("yolos/road_signs_yolo.pt")
+
+# for the redlight_greenlight.mp4 use this link https://www.youtube.com/watch?v=hMzV58Y_1wE
+cap = cv2.VideoCapture("redlight_greenlight.mp4")
+# such a model can be trained or found on roboflow.com
+model =  YOLO("road_signs_yolo.pt")
 result = ['bus_stop', 'do_not_enter', 'do_not_stop', 'do_not_turn_l', 'do_not_turn_r', 'do_not_u_turn', 'enter_left_lane', 'green_light', 'left_right_lane', 'no_parking', 'parking', 'ped_crossing', 'ped_zebra_cross', 'railway_crossing', 'red_light', 'stop', 't_intersection_l', 'traffic_light', 'u_turn', 'warning', 'yellow_light']
 result_array = [result[i] for i in range(len(result))]
 
