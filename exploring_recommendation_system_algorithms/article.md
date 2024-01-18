@@ -21,11 +21,11 @@ There are many different types of recommendation engines, the following are the 
 
  The content-based filtering method is a recommendation algorithm that suggests items similar to the ones the users have previously selected or shown interest in. It can recommend based on the actual content present in the item. For example, as shown in Figure 2, a new article is recommended based on the text present in the articles
 
-![Figure 2, Content-Based Filtering](https://cdn-images-1.medium.com/max/2000/1*a4hScSGe2G762WtX78i0xg.png)
+![Figure 1-  Content-Based Filtering](https://cdn-images-1.medium.com/max/2000/1*a4hScSGe2G762WtX78i0xg.png)
 
 Let’s take a peek at how Netflix suggests what you might want to watch. Imagine they have two special lists: one for what you like (profile) and one for all their shows (item). To match these lists, they use a simple trick called “cosine similarity.”, formula is shown in Figure 2.2. It’s like measuring how close two things are. They check how similar your likes are to the details of the shows. If your likes and a show’s details are similar, Netflix suggests it. This helps them recommend stuff you’re likely to enjoy, based on what you’ve liked before.
 
-![Figure 2.2 Cosine Similarity formula](https://cdn-images-1.medium.com/max/2000/1*MMb3QqZCFpszitGcBOmMEQ.png)
+![Figure 2- Cosine Similarity formula](https://cdn-images-1.medium.com/max/2000/0*SFeeQ43mnIehPPnx)
 
 The major **downside** to this recommendation engine is that all suggestions fall into the same category, and it becomes somewhat monotonous. As the suggestions are based on what the user has seen or liked, we’ll never get new recommendations that the user has not explored in the past.
 
@@ -33,11 +33,11 @@ The major **downside** to this recommendation engine is that all suggestions fal
 
  In collaborative-based filtering recommendation engines, a user-to-user similarity is also considered, along with item similarities, to address some of the drawbacks of content-based filtering. Simply put, a collaborative filtering system recommends an item to user A based on the interests of a similar user B. Figure 3.1 shows a simple working mechanism of collaborative-based filtering
 
-![Figure 3.1 Colaborative-Based filtering](https://cdn-images-1.medium.com/max/2000/1*AsbMg3LOMSsExCIL8XbeVQ.png)
+![Figure 3.1-  Colaborative-Based filtering](https://cdn-images-1.medium.com/max/2000/1*AsbMg3LOMSsExCIL8XbeVQ.png)
 
 The similarity between users can be calculated again by the technique mentioned earlier. A **user-item matrix** is created individually for each customer(Figure 3.2), which stores the user’s preference for an item.Taking the same example of Netflix’s recommendation engine, the user aspects like previously watched and liked titles, ratings provided (if any) by the user, frequently watched genres, and so on are stored and used to find similar users. Once these similar users are found, the engine recommends titles that the user has not yet watched but users with similar interests have watched and liked. This type of filtering is quite popular because it is only based on a user’s past behavior, and no additional input is required. It’s used by many major companies, including Amazon, Netflix, and American Express.
 
-![Figure 3.2 User-Item matrix](https://cdn-images-1.medium.com/max/2000/1*OL80PTi135OTquxATAKO-A.png)
+![Figure 3.2-  User-Item matrix](https://cdn-images-1.medium.com/max/2000/1*OL80PTi135OTquxATAKO-A.png)
 
 ## **There are two types of collaborative filtering algorithms:**
 
@@ -109,6 +109,8 @@ Despite their benefits, graph-based systems face scalability issues, struggle wi
 
 Recommender systems have a rich history, originating in the late 1970s with systems like Grundy. Since their commercial introduction in the early 1990s, they have gained prominence due to their financial benefits and time-saving advantages. Notably, Netflix’s recommendation engine stands as a prominent example of their impact. The increasing demand for reliable recommender systems across domains underscores the need for ongoing research and innovation. These systems effectively streamline decision-making, benefiting businesses and users alike. The mentioned book serves as a comprehensive guide to building recommender systems in Python, offering a spectrum of methods for developers and practitioners. Ultimately, this field’s growth relies on continuous exploration and deeper understanding, as highlighted by the book’s contribution to advancing recommendation engine concepts and implementations.
 
+## Source:
 
+[Applied Recommender Systems with Python](https://link.springer.com/book/10.1007/978-1-4842-8954-9#toc)
 
 
