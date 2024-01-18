@@ -158,6 +158,6 @@ We encourage you to try NST for yourself. Experiment with various content and st
 
 NST is not just about creating art; it's about pushing the boundaries of what AI can achieve. It's a testament to the synergy between technology and human imagination. So, don't hesitate to dive in, explore, and craft your own artistic masterpieces. The world of neural style transfer awaits, and it's yours to shape and share. Let your creativity flow and turn your vision into reality through the power of deep learning and art.
 
-<a target="_blank" href="https://colab.research.google.com/github/huntrese/Sigmoid-Exam/blob/main/ExamSigmoid.ipynb">
+<a target="_blank" href="https://colab.research.google.com/drive/1SConrCEivmXGin4xmheRX04H8IfGIOFG?usp=sharing">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
