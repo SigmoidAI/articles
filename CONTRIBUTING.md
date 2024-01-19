@@ -31,7 +31,7 @@ cd sigmoid-article-repo
 ### Writing Articles
 1. Create a new folder for your article using a meaningful name (e.g., article-the_topic).
 2. Inside the folder, create an article.md file containing your article's content using Markdown format.
-3. Add any related images or assets to the folder.
+3. Add any related images or assets to the folder that are named according to what they represent.
 4. Include a README.md file in the same folder that provides instructions for using any accompanying source code and a brief summary of the article.
 
 
