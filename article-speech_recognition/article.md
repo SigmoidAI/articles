@@ -236,8 +236,8 @@ from os import path
 from deep_translator import GoogleTranslator  # For text translation
 import speech_recognition as sp  # For speech recognition
 
-# Define a class named 'pevervodcik'
-class pevervodcik:
+# Define a class named 'translator'
+class translator:
     # Constructor with 'language' as a parameter
     def __init__(self, language):
         self.language = language
@@ -269,8 +269,8 @@ class pevervodcik:
         myobj.save("welcome.mp3")  # Save the generated speech as an audio file
         os.system("welcome.mp3")  # Play the saved audio file
 
-# Create an instance of 'pevervodcik' with target language 'en' (English)
-Ion = pevervodcik('en')
+# Create an instance of 'translator' with target language 'en' (English)
+Ion = translator('en')
 # Capture audio input from the user
 c = Ion.get_audio()
 # Translate the captured text
@@ -280,7 +280,7 @@ Ion.voice(trans)
 
 # Note: Instead of using a microphone, the code can also be modified to read from an existing audio file.
 ```
-In the code above we have created a simple translator based on speech recognition algorithm. In our class ,,perevodcik,, we have 3 methods.
+In the code above we have created a simple translator based on speech recognition algorithm. In our class ,,translator,, we have 3 methods.
 
 First method is responsible for recognizing the speech and saving it as an audio file.
 
