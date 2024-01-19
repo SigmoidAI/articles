@@ -1,1 +1,4 @@
 In this article you can learn about LTUVectorizer and LTUTransformer. This modules help you vectorize documents with just 2 lines of code.
+
+Vectorization is a key method in Natural Language Processing (NLP) that enables computers to efficiently comprehend and interpret human language. Vectorization makes NLP systems more effective and precise by converting text input into numerical vectors that algorithms can process, understand, and extract valuable language-based information from.
+A well-known vectorization formula is TF-IDF vectorization, but this article comes to show another vectorizer called LTU.
