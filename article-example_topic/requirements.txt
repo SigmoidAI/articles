@@ -1,5 +1,1 @@
-gTTS==2.5.0
-pipwin==0.5.2
-PyAudio 
-SpeechRecognition==3.10.1
-deep_translator
+
