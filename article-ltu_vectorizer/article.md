@@ -88,6 +88,100 @@ print(sparse_matrix)
 
 ```
 
+6. **Parameters**: The main 3 parameters of the Vectorizer are stop_words, smooth_idf and sublinear_tf:
+
+- stop_words : {'english'}, list, default=None
+
+    This parameter will remove all the english stop words from the resulting tokens. Only english is supported.
+
+
+```python3
+vectorizer_stop_words = LTUVectorizer(stop_words="english")
+sparse_matrix_stop_words = vectorizer_stop_words.fit_transform(document)
+print(sparse_matrix_stop_words)
+
+  (0, 7)	1.1159507448271522
+  (0, 5)	1.1159507448271522
+  (0, 2)	1.4154420178615919
+  (0, 6)	1.1159507448271522
+  (1, 0)	1.1159507448271522
+  (1, 6)	1.1159507448271522
+  (2, 0)	1.1159507448271522
+  (2, 7)	1.1159507448271522
+  (2, 5)	1.1159507448271522
+  (3, 3)	1.4154420178615919
+  (3, 1)	1.4154420178615919
+  (3, 8)	1.4154420178615919
+  (3, 4)	1.4154420178615919
+```
+
+- smooth_idf : bool, default=True
+
+    Smooth idf weights by adding one to document frequencies, as if an extra document was seen containing every term in the collection exactly once. Prevents zero divisions.
+
+```python3
+vectorizer_smooth_idf = LTUVectorizer(smooth_idf=False)
+sparse_matrix_smooth_idf = vectorizer_smooth_idf.fit_transform(document)
+print(sparse_matrix_smooth_idf)
+
+  (0, 7)	1.7735971602918106
+  (0, 11)	1.258420201767527
+  (0, 8)	1.258420201767527
+  (0, 0)	1.258420201767527
+  (0, 4)	1.7735971602918106
+  (0, 10)	0.9570609997952424
+  (0, 9)	1.258420201767527
+  (1, 2)	1.258420201767527
+  (1, 10)	0.9570609997952424
+  (1, 9)	1.258420201767527
+  (2, 13)	1.7735971602918106
+  (2, 2)	1.258420201767527
+  (2, 11)	1.258420201767527
+  (2, 8)	1.258420201767527
+  (2, 10)	0.9570609997952424
+  (3, 5)	1.7735971602918106
+  (3, 3)	1.7735971602918106
+  (3, 1)	1.7735971602918106
+  (3, 14)	1.7735971602918106
+  (3, 12)	1.7735971602918106
+  (3, 6)	1.7735971602918106
+  (3, 0)	1.258420201767527
+```
+
+- sublinear_tf : bool, default=False
+
+    Apply sublinear tf scaling, i.e. replace tf with 1 + log(tf)
+
+```python3
+vectorizer_sublinear_tf = LTUVectorizer(sublinear_tf=True)
+sparse_matrix_sublinear_tf = vectorizer_sublinear_tf.fit_transform(document)
+print(sparse_matrix_sublinear_tf)
+
+  (0, 7)	1.3476661267766539
+  (0, 11)	1.062515453813376
+  (0, 8)	1.062515453813376
+  (0, 0)	1.062515453813376
+  (0, 4)	1.3476661267766539
+  (0, 10)	0.8601978316094646
+  (0, 9)	1.062515453813376
+  (1, 2)	1.062515453813376
+  (1, 10)	0.8601978316094646
+  (1, 9)	1.062515453813376
+  (2, 13)	1.3476661267766539
+  (2, 2)	1.062515453813376
+  (2, 11)	1.062515453813376
+  (2, 8)	1.062515453813376
+  (2, 10)	0.8601978316094646
+  (3, 5)	1.3476661267766539
+  (3, 3)	1.3476661267766539
+  (3, 1)	1.3476661267766539
+  (3, 14)	1.3476661267766539
+  (3, 12)	1.3476661267766539
+  (3, 6)	1.3476661267766539
+  (3, 0)	1.062515453813376
+```
+
+
 ## Next Steps
 
 Now that you've successfully created the sparse matrix, feel free to play with the parameters of the constructor. You can also incorporate it in a pipeline with scikit-learn modules.
