@@ -190,3 +190,21 @@ For more information, visit the GitHub page: [https://github.com/SigmoidAI/molda
 
 Happy coding!
 
+If you are interested in other topics like computer vision, check this article:
+
+https://medium.com/softplus-publication/neural-style-transfer-creating-artistic-masterpieces-with-deep-learning-00483b5e6b51
+
+**If you want to connect, check out my LinkedIn:**
+
+[Tudor Sclifos | LinkedIn](https://www.linkedin.com/in/tudor-sclifos-ba3346185/)
+
+Made with ❤ by Sigmoid.
+
+Follow us on Facebook, Instagram, and LinkedIn:
+
+https://www.facebook.com/sigmoidAI
+
+https://www.instagram.com/sigmo.ai/
+
+https://www.linkedin.com/company/sigmoid/
+
