@@ -2,6 +2,8 @@
 
 ![Figure 1. Latent Diffusion Model Architecture](src/images/The-architecture-of-the-latent-diffusion-model-LDM-that-is-considered-a-revolutionary.png)
 
+_Figure 1. Latent Diffusion Model Architecture_
+
 # Introduction
 
 In the last couple of years, large text-to-image models have become more and more powerful, achieving state-of-the-art results. These advancements have sparked interest in the domain and given birth to multiple commercial projects offering text-to-image generation on subscription or token-based models. Although used daily, their users rarely understand the way they work. So, in this article, I will explain the work of the Stable Diffusion model, one of the most popular text-to-image models to date.
@@ -10,11 +12,15 @@ As suggested by its name, Stable Diffusion is a type of diffusion model called a
 
 ![Figure 2. Stable Diffusion Logo](src/images/stable_diffusion_logo.webp)
 
+_Figure 2. Stable Diffusion Logo_
+
 # The convolutional layer
 
 The purpose of the convolutional layer is to optimize the resources needed to process the images and extract the most information from those images. If we use a fully connected layer, then for a black and white figure of $n \times m$ pixels, we would need to have $n \times m$ inputs and $n \times m$ outputs, thus $n^2 \times m^2$ neural connection, which is excessive because in an image, the pixels that are closer to each other present more interest in extracting features that those far apart. In a convolution layer, a kernel, a two-dimensional grid of values, is used to compute the values of the output pixel by multiplying the surrounding pixels from the input to the corresponding value from the kernel and then adding the values together to get the value of the output. Kernel values can vary depending on the extracted features.
 
 ![Figure 3. Convolutional Neural Networks](src/images/convolutional-neural-network.webp)
+
+_Figure 3. Convolutional Neural Networks_
 
 # U-Net and Computer Vision
 
@@ -22,11 +28,17 @@ Computer vision is a field of computer science that focuses on enabling computer
 
 ![Figure 4. U-Net Architecture](src/images/u-net-architecture.png)
 
+_Figure 4. U-Net Architecture_
+
 The **U-NET** architecture is composed of two “paths”. The first is the contraction path, also called the encoder. It works by saving the image as a three-dimensional tensor and then running $3 \times 3$ ReLu kernels to create different convolutions, starting from 3, then going to 64, to 128, to 256, to 512, and finally to 1024 channels. To get more information, after every two convolutional blocks, the image gets scaled down using a $2 \times 2$ max-pool before it goes into the following two convolutional blocks, thus widening the field of view of the kernels and capturing more context. While doing this, U-Net also saves the information each time the resolution is decreased. The second path is the symmetric expansion path, the decoder. It follows the opposite way to the first path by scaling the image back and gradually decreasing the number of channels. When reconstructing the image, the saved information from the corresponding resolution is added to the end of the channels and then incorporated. After merging all the channels and obtaining the final resolution, it returns the segmentation mask of the image. To train a U-Net we need a set of images and ground truths for each image, which is just the segmentation mask that we try to obtain. This set, then, is given to the U-Net to train on, for as many generations as needed until an accuracy threshold is reached.
 
 ![Figure 5. U-Net Architecture Detailed](src/images/u-net-architecture-details.png)
 
-![Figure 6. U-Net work](src/images/U-Net.png)
+_Figure 5. U-Net Architecture Detailed_
+
+![Figure 6.  U-Net application in medical imaging (3 generations)](src/images/U-Net.png)
+
+_Figure 6. U-Net application in medical imaging (3 generations)_
 
 # U-Net for denoising and diffussion
 
@@ -34,15 +46,21 @@ The U-Net performed so well at identifying things within an image that people st
 
 ![Figure 7. U-Net denoising](src/images/diffusion_schematics.png)
 
+_Figure 7. U-Net denoising_
+
 If for example, the U-Net is trained on a similar set of data, but instead of a noisy image, it is fed a figure that contains pure noise, it will gradually denoise the image, but instead of increasing the quality of the initial image, it will create a new image similar to those in the training set, but in the same time unique, and this is what is called a diffusion model.
 
 ![Figure 8. U-Net diffusion](src/images/diffusion-models-figure-1.png)
+
+_Figure 8. U-Net diffusion_
 
 # Latent space and Latent Diffusion
 
 Although U-Net needs a low amount of sample data to learn, it still needs a considerable amount of time to learn from and process new data, to improve those times, the diffusion is moved from a pixel space to a latent space. A latent space is a discretized method of representing information and it uses a special type of neural network, named auto-encoders to transform images from pixels to a set of features encoded in a tensor (n-dimensional vector) and then back from the tensor to the best approximation of the initial image. If for example, we have a $512 \times 512$ colored image (which is the default image size for Stable Diffusion), we will need $512 \times 512 \times 3$ space to represent it, and the model would need to analyze all of it, but when using an autoencoder the space is equal to $64 \times 64 \times 4$ which is 48 times decrease in space, thus a 48 times boost in performance. So the U-Net is not trained on images, but rather on latent representations of them, and latent noise is introduced to those images and, consequently, latent noise is used to generate new latent representations of images, that are, then, converted to pixel space and human comprehendible images. This is now considered a latent diffusion model.
 
-![Figure 9. Auto-Encoder](src/images/auto-encoder.webp)
+![Figure 9. Auto-Encoder visual representation](src/images/auto-encoder.webp)
+
+_Figure 9. Auto-Encoder visual representation_
 
 # Conclusion
 
