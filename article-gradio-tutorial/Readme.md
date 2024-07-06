@@ -10,3 +10,6 @@ To install Gradio, run the following command:
 
 ## Medium
 This code is part of this Medium Article. Please refer to it here: https://medium.com/@mihaelacatan/gradio-simplifying-gui-creation-for-machine-learning-9ba19efc0eb4
+
+## Author
+This article has been written by Mihaela Catan.
