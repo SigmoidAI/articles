@@ -325,11 +325,19 @@ class ArticleReviewer:
             # Get the file content from the specific commit
             file_content = self.repo.get_contents(file_path, ref=head_sha)
 
-            # Decode the content if it's base64 encoded
-            if file_content.encoding == "base64":
-                content = base64.b64decode(file_content.content).decode("utf-8")
-            else:
-                content = file_content.content
+            # GitHub API always returns base64 encoded content
+            decoded_bytes = base64.b64decode(file_content.content)
+
+            # Try UTF-8 decoding first, fallback to latin-1 if it fails
+            try:
+                content = decoded_bytes.decode("utf-8")
+            except UnicodeDecodeError:
+                try:
+                    content = decoded_bytes.decode("latin-1")
+                    print(f"⚠️  Used latin-1 encoding fallback for {file_path}")
+                except UnicodeDecodeError:
+                    print(f"❌ Could not decode file {file_path} with UTF-8 or latin-1")
+                    return None
 
             return content
 
