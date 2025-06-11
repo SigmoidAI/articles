@@ -15,9 +15,12 @@ permissions:
 jobs:
   review-article:
     runs-on: ubuntu-latest
-    # Only run on PR comments that contain the trigger phrase, or on PR events (automatically for article-* paths or with 'article' label)
+    # Only run on PR comments that contain the trigger phrase, or on PR events 
+    # (automatically for article-* paths or with 'article' label)
+    # Note: labeled events don't respect paths filter, so we filter at job level
     if: |
-      (github.event_name == 'pull_request') ||
+      (github.event_name == 'pull_request' && 
+       (github.event.action != 'labeled' || github.event.label.name == 'article')) ||
       (github.event_name == 'issue_comment' && 
        github.event.issue.pull_request && 
        contains(github.event.comment.body, 'bugbot run a check'))
