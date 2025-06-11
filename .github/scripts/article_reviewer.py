@@ -25,6 +25,20 @@ except ImportError as e:
     print("Please ensure all dependencies are installed.")
     sys.exit(1)
 
+# Import configuration
+try:
+    from review_config import CONFIG, QUALITY_THRESHOLDS
+except ImportError:
+    print("Warning: Could not import review_config. Using default settings.")
+    CONFIG = None
+    QUALITY_THRESHOLDS = {
+        "excellent": 8.5,
+        "good": 7.0,
+        "acceptable": 6.0,
+        "needs_improvement": 4.0,
+        "poor": 0.0,
+    }
+
 
 @dataclass
 class ReviewCriteria:
@@ -423,6 +437,12 @@ class ArticleReviewer:
             "pr_number": self.pr_number,
             "repository": self.repository_name,
             "reviewer_version": "1.0.0",
+            "primary_reviewer": (
+                CONFIG.NOTIFICATION_CONFIG["primary_reviewer"]
+                if CONFIG
+                else "eduard-balamatiuc"
+            ),
+            "quality_thresholds": QUALITY_THRESHOLDS,
         }
 
         # Save results for GitHub Actions to use
