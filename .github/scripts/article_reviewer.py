@@ -127,6 +127,7 @@ class ArticleReviewer:
 
         Uses specific criteria to identify article files while avoiding false positives
         from common documentation files like README.md, CHANGELOG.md, etc.
+        Also filters out non-text files like images.
         """
         pr = self.repo.get_pull(self.pr_number)
         changed_files = []
@@ -138,6 +139,16 @@ class ArticleReviewer:
         for file in pr.get_files():
             filename = file.filename.lower()
             print(f"  📄 Checking: {file.filename}")
+
+            # Skip non-text files (images, videos, etc.)
+            if self._is_non_text_file(filename):
+                print(f"    ⏭️  Skipped (non-text file): {file.filename}")
+                continue
+
+            # Skip files that are too large (likely binary or generated)
+            if file.changes > 10000:  # Skip files with excessive changes
+                print(f"    ⏭️  Skipped (too many changes): {file.filename}")
+                continue
 
             # Detect article files using multiple criteria to avoid false positives
             # from common documentation files like README.md, CHANGELOG.md, etc.
@@ -200,11 +211,137 @@ class ArticleReviewer:
         print(f"📝 Total files selected for review: {len(changed_files)}")
         return changed_files
 
+    def _is_non_text_file(self, filename: str) -> bool:
+        """Check if a file is a non-text file that should not be reviewed."""
+        # Common image extensions
+        image_extensions = {
+            ".png",
+            ".jpg",
+            ".jpeg",
+            ".gif",
+            ".bmp",
+            ".svg",
+            ".webp",
+            ".ico",
+            ".tiff",
+            ".tif",
+            ".raw",
+            ".heic",
+            ".avif",
+        }
+
+        # Common video extensions
+        video_extensions = {
+            ".mp4",
+            ".avi",
+            ".mkv",
+            ".mov",
+            ".wmv",
+            ".flv",
+            ".webm",
+            ".m4v",
+            ".3gp",
+            ".ogv",
+            ".f4v",
+        }
+
+        # Common audio extensions
+        audio_extensions = {
+            ".mp3",
+            ".wav",
+            ".flac",
+            ".aac",
+            ".ogg",
+            ".wma",
+            ".m4a",
+            ".opus",
+        }
+
+        # Common binary/executable extensions
+        binary_extensions = {
+            ".exe",
+            ".dll",
+            ".so",
+            ".dylib",
+            ".bin",
+            ".app",
+            ".deb",
+            ".rpm",
+            ".msi",
+            ".dmg",
+            ".pkg",
+            ".zip",
+            ".tar",
+            ".gz",
+            ".rar",
+            ".7z",
+        }
+
+        # Common document formats (that aren't plain text)
+        document_extensions = {
+            ".pdf",
+            ".doc",
+            ".docx",
+            ".xls",
+            ".xlsx",
+            ".ppt",
+            ".pptx",
+            ".odt",
+            ".ods",
+            ".odp",
+        }
+
+        # Common font extensions
+        font_extensions = {".ttf", ".otf", ".woff", ".woff2", ".eot"}
+
+        # Get file extension
+        file_ext = Path(filename).suffix.lower()
+
+        # Check if it's any type of non-text file
+        non_text_extensions = (
+            image_extensions
+            | video_extensions
+            | audio_extensions
+            | binary_extensions
+            | document_extensions
+            | font_extensions
+        )
+
+        return file_ext in non_text_extensions
+
     def extract_article_content(self, file_path: str) -> Dict[str, Any]:
         """Extract and analyze article content."""
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
-                content = f.read()
+            # Check if file exists
+            if not os.path.exists(file_path):
+                print(f"⚠️  File not found: {file_path}")
+                return None
+
+            # Check if it's a text file we can process
+            if self._is_non_text_file(file_path.lower()):
+                print(f"⚠️  Skipping non-text file: {file_path}")
+                return None
+
+            # Read the file with proper encoding handling
+            try:
+                with open(file_path, "r", encoding="utf-8") as f:
+                    content = f.read()
+            except UnicodeDecodeError:
+                # Try with different encoding if UTF-8 fails
+                try:
+                    with open(file_path, "r", encoding="latin-1") as f:
+                        content = f.read()
+                    print(f"ℹ️  Used latin-1 encoding for: {file_path}")
+                except Exception as e:
+                    print(
+                        f"❌ Could not read file with any encoding: {file_path} - {e}"
+                    )
+                    return None
+
+            # Skip empty files
+            if not content.strip():
+                print(f"⚠️  File is empty: {file_path}")
+                return None
 
             # Convert markdown to HTML for better analysis
             html = markdown.markdown(content, extensions=["codehilite", "fenced_code"])
@@ -235,7 +372,7 @@ class ArticleReviewer:
             }
 
         except Exception as e:
-            print(f"Error extracting content from {file_path}: {e}")
+            print(f"❌ Error extracting content from {file_path}: {e}")
             return None
 
     def _extract_json_from_text(self, text: str) -> Optional[Dict[str, Any]]:
@@ -491,6 +628,14 @@ class ArticleReviewer:
         """Main method to run the article review process."""
         print("🤖 Starting AI Article Review...")
 
+        # Debug: Print current working directory and environment
+        print(f"📁 Current working directory: {os.getcwd()}")
+        print(f"🔧 Python executable: {sys.executable}")
+        print(f"📋 Environment variables:")
+        print(f"   - PR_NUMBER: {os.environ.get('PR_NUMBER', 'Not set')}")
+        print(f"   - REPOSITORY: {os.environ.get('REPOSITORY', 'Not set')}")
+        print(f"   - GITHUB_WORKSPACE: {os.environ.get('GITHUB_WORKSPACE', 'Not set')}")
+
         # Get changed files
         changed_files = self.get_changed_files()
 
@@ -499,10 +644,55 @@ class ArticleReviewer:
             return
 
         print(f"Found {len(changed_files)} article file(s) to review:")
+
+        # Validate file accessibility
+        accessible_files = []
         for file in changed_files:
-            print(f"  - {file}")
+            if os.path.exists(file):
+                accessible_files.append(file)
+                print(f"  ✅ {file}")
+            else:
+                print(f"  ❌ {file} (file not found)")
+
+        if not accessible_files:
+            print("❌ No accessible files found for review.")
+            # Create error response
+            error_response = {
+                "overall_score": 0,
+                "detailed_feedback": {
+                    "file_access_error": {
+                        "score": 0,
+                        "feedback": f"None of the {len(changed_files)} identified files could be accessed. This may indicate a file path issue or the files may not exist in the current working directory.",
+                    }
+                },
+                "suggestions": [
+                    "Check that the working directory is correct",
+                    "Ensure all files exist in the repository",
+                    "Verify file paths are correct",
+                ],
+                "technical_accuracy_notes": "Could not access any files for review",
+                "review_metadata": {
+                    "reviewed_files": 0,
+                    "total_files": len(changed_files),
+                    "inaccessible_files": len(changed_files),
+                    "review_timestamp": datetime.now(timezone.utc).strftime(
+                        "%Y-%m-%dT%H:%M:%SZ"
+                    ),
+                    "pr_number": self.pr_number,
+                    "repository": self.repository_name,
+                },
+            }
+
+            with open("review_results.json", "w") as f:
+                json.dump(error_response, f, indent=2)
+            return
+
+        changed_files = accessible_files  # Only process accessible files
 
         all_reviews = {}
+
+        processed_files = []
+        skipped_files = []
 
         for file_path in changed_files:
             print(f"\n📖 Reviewing: {file_path}")
@@ -510,6 +700,8 @@ class ArticleReviewer:
             # Extract article content
             article_data = self.extract_article_content(file_path)
             if not article_data:
+                print(f"⏭️  Skipping {file_path} - could not extract content")
+                skipped_files.append(file_path)
                 continue
 
             # Check requirements compliance
@@ -531,6 +723,50 @@ class ArticleReviewer:
             }
 
             all_reviews[file_path] = review_result
+            processed_files.append(file_path)
+
+        # Report processing results
+        print(f"\n📊 Processing Summary:")
+        print(f"  ✅ Successfully processed: {len(processed_files)} files")
+        if skipped_files:
+            print(f"  ⏭️  Skipped: {len(skipped_files)} files")
+            for skipped_file in skipped_files:
+                print(f"    - {skipped_file}")
+
+        if not all_reviews:
+            print("❌ No files could be processed for review.")
+            # Create a minimal response indicating no files were processed
+            final_review = {
+                "overall_score": 0,
+                "detailed_feedback": {
+                    "no_files": {
+                        "score": 0,
+                        "feedback": f"No reviewable files found. Checked {len(changed_files)} files, skipped {len(skipped_files)} files.",
+                    }
+                },
+                "suggestions": [
+                    "Ensure article files are text-based (e.g., .md files) and exist in the repository"
+                ],
+                "technical_accuracy_notes": "No files were available for review",
+                "review_metadata": {
+                    "reviewed_files": 0,
+                    "total_files": len(changed_files),
+                    "skipped_files": len(skipped_files),
+                    "review_timestamp": datetime.now(timezone.utc).strftime(
+                        "%Y-%m-%dT%H:%M:%SZ"
+                    ),
+                    "pr_number": self.pr_number,
+                    "repository": self.repository_name,
+                    "reviewer_version": "1.0.0",
+                },
+            }
+
+            # Save results
+            with open("review_results.json", "w") as f:
+                json.dump(final_review, f, indent=2)
+
+            print("⚠️  Review completed with no processable files.")
+            return
 
         # If multiple files, create a summary
         if len(all_reviews) == 1:
