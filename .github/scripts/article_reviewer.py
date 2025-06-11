@@ -123,7 +123,11 @@ class ArticleReviewer:
             sys.exit(1)
 
     def get_changed_files(self) -> List[str]:
-        """Get list of changed files in the PR that could be articles."""
+        """Get list of changed files in the PR that could be articles.
+
+        Uses specific criteria to identify article files while avoiding false positives
+        from common documentation files like README.md, CHANGELOG.md, etc.
+        """
         pr = self.repo.get_pull(self.pr_number)
         changed_files = []
 
@@ -135,22 +139,23 @@ class ArticleReviewer:
             filename = file.filename.lower()
             print(f"  📄 Checking: {file.filename}")
 
-            # Check various patterns for article files
+            # Detect article files using multiple criteria to avoid false positives
+            # from common documentation files like README.md, CHANGELOG.md, etc.
             is_article_file = (
-                # Traditional patterns
+                # 1. Traditional article naming patterns
                 filename.startswith("article-")
                 or filename.startswith("article_")
                 or
-                # Files with 'article' in directory path
+                # 2. Files with 'article' in directory path (e.g., "content/article-ai.md")
                 "/article" in filename
                 or
-                # Markdown files with 'article' in filename
+                # 3. Markdown files with 'article' in filename (e.g., "my-article.md")
                 (filename.endswith(".md") and "article" in filename)
                 or
-                # Files in directories containing 'article'
+                # 4. Files in directories containing 'article' (e.g., "articles/intro.md")
                 any(part for part in filename.split("/") if "article" in part.lower())
                 or
-                # README files in article directories
+                # 5. README files specifically in article directories
                 (
                     filename.endswith("readme.md")
                     and any(
@@ -158,17 +163,33 @@ class ArticleReviewer:
                     )
                 )
                 or
-                # Any markdown file that might be documentation
+                # 6. Content markdown files in subdirectories (excluding common docs)
+                # This replaces the problematic catch-all that was causing false positives
                 (
                     filename.endswith(".md")
-                    and not filename.endswith("readme.md")
-                    and len([part for part in filename.split("/") if part]) >= 1
-                )  # At least one path component
+                    and not filename.startswith(".github/")  # Exclude GitHub configs
+                    and not filename.lower().endswith("readme.md")  # Exclude READMEs
+                    and not filename.lower().endswith(
+                        "changelog.md"
+                    )  # Exclude changelogs
+                    and not filename.lower().endswith("license.md")  # Exclude licenses
+                    and not filename.lower().endswith(
+                        "contributing.md"
+                    )  # Exclude contrib guides
+                    and not any(  # Exclude other common documentation files
+                        common_doc in filename.lower()
+                        for common_doc in [
+                            "license",
+                            "changelog",
+                            "todo",
+                            "authors",
+                            "contributors",
+                        ]
+                    )
+                    and len([part for part in filename.split("/") if part])
+                    >= 2  # Must be in a subdirectory (not root-level docs)
+                )
             )
-
-            # Additional check: if it's a markdown file, it's likely content we should review
-            if filename.endswith(".md") and not filename.startswith(".github/"):
-                is_article_file = True
 
             if is_article_file:
                 changed_files.append(file.filename)
