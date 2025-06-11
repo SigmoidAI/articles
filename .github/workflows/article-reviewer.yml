@@ -28,7 +28,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install openai requests PyGithub python-dotenv markdown beautifulsoup4
+        pip install -r reviewer-requirements.txt
 
     - name: Run AI Article Reviewer
       env:
