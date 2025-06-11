@@ -123,14 +123,81 @@ class ArticleReviewer:
             sys.exit(1)
 
     def get_changed_files(self) -> List[str]:
-        """Get list of changed files in the PR."""
+        """Get list of changed files in the PR that could be articles.
+
+        Uses specific criteria to identify article files while avoiding false positives
+        from common documentation files like README.md, CHANGELOG.md, etc.
+        """
         pr = self.repo.get_pull(self.pr_number)
         changed_files = []
 
-        for file in pr.get_files():
-            if file.filename.startswith("article-") and file.filename.endswith(".md"):
-                changed_files.append(file.filename)
+        print(
+            f"🔍 Analyzing {pr.get_files().totalCount} changed files in PR #{self.pr_number}:"
+        )
 
+        for file in pr.get_files():
+            filename = file.filename.lower()
+            print(f"  📄 Checking: {file.filename}")
+
+            # Detect article files using multiple criteria to avoid false positives
+            # from common documentation files like README.md, CHANGELOG.md, etc.
+            is_article_file = (
+                # 1. Traditional article naming patterns
+                filename.startswith("article-")
+                or filename.startswith("article_")
+                or
+                # 2. Files with 'article' in directory path (e.g., "content/article-ai.md")
+                "/article" in filename
+                or
+                # 3. Markdown files with 'article' in filename (e.g., "my-article.md")
+                (filename.endswith(".md") and "article" in filename)
+                or
+                # 4. Files in directories containing 'article' (e.g., "articles/intro.md")
+                any(part for part in filename.split("/") if "article" in part.lower())
+                or
+                # 5. README files specifically in article directories
+                (
+                    filename.endswith("readme.md")
+                    and any(
+                        "article" in part.lower() for part in filename.split("/")[:-1]
+                    )
+                )
+                or
+                # 6. Content markdown files in subdirectories (excluding common docs)
+                # This replaces the problematic catch-all that was causing false positives
+                (
+                    filename.endswith(".md")
+                    and not filename.startswith(".github/")  # Exclude GitHub configs
+                    and not filename.lower().endswith("readme.md")  # Exclude READMEs
+                    and not filename.lower().endswith(
+                        "changelog.md"
+                    )  # Exclude changelogs
+                    and not filename.lower().endswith("license.md")  # Exclude licenses
+                    and not filename.lower().endswith(
+                        "contributing.md"
+                    )  # Exclude contrib guides
+                    and not any(  # Exclude other common documentation files
+                        common_doc in filename.lower()
+                        for common_doc in [
+                            "license",
+                            "changelog",
+                            "todo",
+                            "authors",
+                            "contributors",
+                        ]
+                    )
+                    and len([part for part in filename.split("/") if part])
+                    >= 2  # Must be in a subdirectory (not root-level docs)
+                )
+            )
+
+            if is_article_file:
+                changed_files.append(file.filename)
+                print(f"    ✅ Added for review: {file.filename}")
+            else:
+                print(f"    ⏭️  Skipped: {file.filename}")
+
+        print(f"📝 Total files selected for review: {len(changed_files)}")
         return changed_files
 
     def extract_article_content(self, file_path: str) -> Dict[str, Any]:
@@ -374,10 +441,19 @@ class ArticleReviewer:
         """Check if article follows the repository guidelines."""
         compliance_issues = []
 
-        # Check if it's in a proper article directory
-        if not file_path.startswith("article-"):
+        # More flexible check for article directory structure
+        filename_lower = file_path.lower()
+        in_article_directory = (
+            filename_lower.startswith("article-")
+            or filename_lower.startswith("article_")
+            or "/article" in filename_lower
+            or any("article" in part.lower() for part in file_path.split("/"))
+        )
+
+        if not in_article_directory and file_path.endswith(".md"):
             compliance_issues.append(
-                "Article should be in a directory named 'article-<topic>'"
+                "Article should be in a directory named 'article-<topic>' or 'article_<topic>', "
+                "or have 'article' in the directory/filename"
             )
 
         # Check for README.md in the same directory
@@ -386,11 +462,19 @@ class ArticleReviewer:
         if not article_dir:
             article_dir = "."
 
-        readme_path = os.path.join(article_dir, "README.md")
+        # Check for various case variations of README files
+        readme_variants = ["README.md", "readme.md", "Readme.md", "ReadMe.md"]
+        readme_exists = any(
+            os.path.exists(os.path.join(article_dir, variant))
+            for variant in readme_variants
+        )
+
         # Ensure we're not checking if the file itself is README.md
         file_name = os.path.basename(file_path)
-        if file_name != "README.md" and not os.path.exists(readme_path):
-            compliance_issues.append("Missing README.md file in article directory")
+        if file_name.lower() != "readme.md" and not readme_exists:
+            # Only warn about missing README for files in subdirectories
+            if article_dir != ".":
+                compliance_issues.append("Missing README.md file in article directory")
 
         # Check for src directory if code is included
         src_path = os.path.join(article_dir, "src")
