@@ -426,7 +426,7 @@ class ArticleReviewer:
             filename_lower.startswith("article-")
             or filename_lower.startswith("article_")
             or "/article" in filename_lower
-            or any("article" in part for part in file_path.split("/"))
+            or any("article" in part.lower() for part in file_path.split("/"))
         )
 
         if not in_article_directory and file_path.endswith(".md"):
@@ -441,10 +441,16 @@ class ArticleReviewer:
         if not article_dir:
             article_dir = "."
 
-        readme_path = os.path.join(article_dir, "README.md")
+        # Check for various case variations of README files
+        readme_variants = ["README.md", "readme.md", "Readme.md", "ReadMe.md"]
+        readme_exists = any(
+            os.path.exists(os.path.join(article_dir, variant))
+            for variant in readme_variants
+        )
+
         # Ensure we're not checking if the file itself is README.md
         file_name = os.path.basename(file_path)
-        if file_name.lower() != "readme.md" and not os.path.exists(readme_path):
+        if file_name.lower() != "readme.md" and not readme_exists:
             # Only warn about missing README for files in subdirectories
             if article_dir != ".":
                 compliance_issues.append("Missing README.md file in article directory")
