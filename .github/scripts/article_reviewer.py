@@ -8,6 +8,7 @@ import os
 import json
 import sys
 import re
+import base64
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
@@ -54,7 +55,11 @@ class ReviewCriteria:
 
 
 class ArticleReviewer:
-    """Main class for AI-powered article review."""
+    """Main class for AI-powered article review.
+
+    Updated to fetch file contents directly from GitHub PR via API instead of
+    using local filesystem, resolving file access issues in CI/CD environments.
+    """
 
     def __init__(self):
         # Validate required environment variables
@@ -309,34 +314,44 @@ class ArticleReviewer:
 
         return file_ext in non_text_extensions
 
-    def extract_article_content(self, file_path: str) -> Dict[str, Any]:
-        """Extract and analyze article content."""
+    def get_file_content_from_pr(self, file_path: str) -> Optional[str]:
+        """Get file content directly from the PR using GitHub API."""
         try:
-            # Check if file exists
-            if not os.path.exists(file_path):
-                print(f"⚠️  File not found: {file_path}")
-                return None
+            pr = self.repo.get_pull(self.pr_number)
+
+            # Get the head SHA from the PR
+            head_sha = pr.head.sha
+
+            # Get the file content from the specific commit
+            file_content = self.repo.get_contents(file_path, ref=head_sha)
+
+            # Decode the content if it's base64 encoded
+            if file_content.encoding == "base64":
+                content = base64.b64decode(file_content.content).decode("utf-8")
+            else:
+                content = file_content.content
+
+            return content
+
+        except Exception as e:
+            print(f"❌ Error getting file content from PR for {file_path}: {e}")
+            return None
+
+    def extract_article_content(self, file_path: str) -> Dict[str, Any]:
+        """Extract and analyze article content from PR."""
+        try:
+            print(f"📖 Getting content from GitHub API for: {file_path}")
 
             # Check if it's a text file we can process
             if self._is_non_text_file(file_path.lower()):
                 print(f"⚠️  Skipping non-text file: {file_path}")
                 return None
 
-            # Read the file with proper encoding handling
-            try:
-                with open(file_path, "r", encoding="utf-8") as f:
-                    content = f.read()
-            except UnicodeDecodeError:
-                # Try with different encoding if UTF-8 fails
-                try:
-                    with open(file_path, "r", encoding="latin-1") as f:
-                        content = f.read()
-                    print(f"ℹ️  Used latin-1 encoding for: {file_path}")
-                except Exception as e:
-                    print(
-                        f"❌ Could not read file with any encoding: {file_path} - {e}"
-                    )
-                    return None
+            # Get file content directly from the PR
+            content = self.get_file_content_from_pr(file_path)
+            if not content:
+                print(f"❌ Could not get content for: {file_path}")
+                return None
 
             # Skip empty files
             if not content.strip():
@@ -574,6 +589,16 @@ class ArticleReviewer:
                 "code_quality_issues": [],
             }
 
+    def check_file_exists_in_pr(self, file_path: str) -> bool:
+        """Check if a file exists in the PR using GitHub API."""
+        try:
+            pr = self.repo.get_pull(self.pr_number)
+            head_sha = pr.head.sha
+            self.repo.get_contents(file_path, ref=head_sha)
+            return True
+        except Exception:
+            return False
+
     def check_requirements_compliance(self, file_path: str) -> Dict[str, Any]:
         """Check if article follows the repository guidelines."""
         compliance_issues = []
@@ -593,7 +618,7 @@ class ArticleReviewer:
                 "or have 'article' in the directory/filename"
             )
 
-        # Check for README.md in the same directory
+        # Check for README.md in the same directory using GitHub API
         article_dir = os.path.dirname(file_path)
         # Handle root-level files where dirname returns empty string
         if not article_dir:
@@ -601,10 +626,13 @@ class ArticleReviewer:
 
         # Check for various case variations of README files
         readme_variants = ["README.md", "readme.md", "Readme.md", "ReadMe.md"]
-        readme_exists = any(
-            os.path.exists(os.path.join(article_dir, variant))
-            for variant in readme_variants
-        )
+        readme_exists = False
+
+        for variant in readme_variants:
+            readme_path = os.path.join(article_dir, variant).replace("\\", "/")
+            if self.check_file_exists_in_pr(readme_path):
+                readme_exists = True
+                break
 
         # Ensure we're not checking if the file itself is README.md
         file_name = os.path.basename(file_path)
@@ -613,11 +641,13 @@ class ArticleReviewer:
             if article_dir != ".":
                 compliance_issues.append("Missing README.md file in article directory")
 
-        # Check for src directory if code is included
-        src_path = os.path.join(article_dir, "src")
-        if os.path.exists(src_path):
-            requirements_path = os.path.join(article_dir, "requirements.txt")
-            if not os.path.exists(requirements_path):
+        # Check for src directory and requirements.txt using GitHub API
+        src_path = os.path.join(article_dir, "src").replace("\\", "/")
+        if self.check_file_exists_in_pr(src_path):
+            requirements_path = os.path.join(article_dir, "requirements.txt").replace(
+                "\\", "/"
+            )
+            if not self.check_file_exists_in_pr(requirements_path):
                 compliance_issues.append(
                     "Missing requirements.txt file for code examples"
                 )
@@ -644,50 +674,8 @@ class ArticleReviewer:
             return
 
         print(f"Found {len(changed_files)} article file(s) to review:")
-
-        # Validate file accessibility
-        accessible_files = []
         for file in changed_files:
-            if os.path.exists(file):
-                accessible_files.append(file)
-                print(f"  ✅ {file}")
-            else:
-                print(f"  ❌ {file} (file not found)")
-
-        if not accessible_files:
-            print("❌ No accessible files found for review.")
-            # Create error response
-            error_response = {
-                "overall_score": 0,
-                "detailed_feedback": {
-                    "file_access_error": {
-                        "score": 0,
-                        "feedback": f"None of the {len(changed_files)} identified files could be accessed. This may indicate a file path issue or the files may not exist in the current working directory.",
-                    }
-                },
-                "suggestions": [
-                    "Check that the working directory is correct",
-                    "Ensure all files exist in the repository",
-                    "Verify file paths are correct",
-                ],
-                "technical_accuracy_notes": "Could not access any files for review",
-                "review_metadata": {
-                    "reviewed_files": 0,
-                    "total_files": len(changed_files),
-                    "inaccessible_files": len(changed_files),
-                    "review_timestamp": datetime.now(timezone.utc).strftime(
-                        "%Y-%m-%dT%H:%M:%SZ"
-                    ),
-                    "pr_number": self.pr_number,
-                    "repository": self.repository_name,
-                },
-            }
-
-            with open("review_results.json", "w") as f:
-                json.dump(error_response, f, indent=2)
-            return
-
-        changed_files = accessible_files  # Only process accessible files
+            print(f"  📄 {file}")
 
         all_reviews = {}
 
