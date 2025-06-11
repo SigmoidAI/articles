@@ -23,7 +23,7 @@ jobs:
        (github.event.action != 'labeled' || github.event.label.name == 'article')) ||
       (github.event_name == 'issue_comment' && 
        github.event.issue.pull_request && 
-       contains(github.event.comment.body, 'bugbot run a check'))
+       contains(github.event.comment.body, 'ai-reviewer have a look'))
     
     steps:
     - name: Get PR head ref for issue_comment events
