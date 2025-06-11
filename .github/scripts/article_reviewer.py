@@ -607,6 +607,15 @@ class ArticleReviewer:
         except Exception:
             return False
 
+    def _normalize_github_path(self, article_dir: str, filename: str) -> str:
+        """Normalize file path for GitHub API by handling root directory correctly."""
+        if article_dir == ".":
+            # For root directory, return just the filename
+            return filename
+        else:
+            # For subdirectories, join normally and convert backslashes
+            return os.path.join(article_dir, filename).replace("\\", "/")
+
     def check_requirements_compliance(self, file_path: str) -> Dict[str, Any]:
         """Check if article follows the repository guidelines."""
         compliance_issues = []
@@ -637,7 +646,7 @@ class ArticleReviewer:
         readme_exists = False
 
         for variant in readme_variants:
-            readme_path = os.path.join(article_dir, variant).replace("\\", "/")
+            readme_path = self._normalize_github_path(article_dir, variant)
             if self.check_file_exists_in_pr(readme_path):
                 readme_exists = True
                 break
@@ -650,10 +659,10 @@ class ArticleReviewer:
                 compliance_issues.append("Missing README.md file in article directory")
 
         # Check for src directory and requirements.txt using GitHub API
-        src_path = os.path.join(article_dir, "src").replace("\\", "/")
+        src_path = self._normalize_github_path(article_dir, "src")
         if self.check_file_exists_in_pr(src_path):
-            requirements_path = os.path.join(article_dir, "requirements.txt").replace(
-                "\\", "/"
+            requirements_path = self._normalize_github_path(
+                article_dir, "requirements.txt"
             )
             if not self.check_file_exists_in_pr(requirements_path):
                 compliance_issues.append(
