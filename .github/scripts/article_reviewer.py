@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 import subprocess
+from datetime import datetime, timezone
 
 # External libraries
 try:
@@ -416,9 +417,9 @@ class ArticleReviewer:
         final_review["review_metadata"] = {
             "reviewed_files": len(all_reviews),
             "total_files": len(changed_files),
-            "review_timestamp": subprocess.run(
-                ["date", "-u", "+%Y-%m-%dT%H:%M:%SZ"], capture_output=True, text=True
-            ).stdout.strip(),
+            "review_timestamp": datetime.now(timezone.utc).strftime(
+                "%Y-%m-%dT%H:%M:%SZ"
+            ),
             "pr_number": self.pr_number,
             "repository": self.repository_name,
             "reviewer_version": "1.0.0",
