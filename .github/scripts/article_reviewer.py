@@ -123,14 +123,60 @@ class ArticleReviewer:
             sys.exit(1)
 
     def get_changed_files(self) -> List[str]:
-        """Get list of changed files in the PR."""
+        """Get list of changed files in the PR that could be articles."""
         pr = self.repo.get_pull(self.pr_number)
         changed_files = []
 
-        for file in pr.get_files():
-            if file.filename.startswith("article-") and file.filename.endswith(".md"):
-                changed_files.append(file.filename)
+        print(
+            f"🔍 Analyzing {pr.get_files().totalCount} changed files in PR #{self.pr_number}:"
+        )
 
+        for file in pr.get_files():
+            filename = file.filename.lower()
+            print(f"  📄 Checking: {file.filename}")
+
+            # Check various patterns for article files
+            is_article_file = (
+                # Traditional patterns
+                filename.startswith("article-")
+                or filename.startswith("article_")
+                or
+                # Files with 'article' in directory path
+                "/article" in filename
+                or
+                # Markdown files with 'article' in filename
+                (filename.endswith(".md") and "article" in filename)
+                or
+                # Files in directories containing 'article'
+                any(part for part in filename.split("/") if "article" in part.lower())
+                or
+                # README files in article directories
+                (
+                    filename.endswith("readme.md")
+                    and any(
+                        "article" in part.lower() for part in filename.split("/")[:-1]
+                    )
+                )
+                or
+                # Any markdown file that might be documentation
+                (
+                    filename.endswith(".md")
+                    and not filename.endswith("readme.md")
+                    and len([part for part in filename.split("/") if part]) >= 1
+                )  # At least one path component
+            )
+
+            # Additional check: if it's a markdown file, it's likely content we should review
+            if filename.endswith(".md") and not filename.startswith(".github/"):
+                is_article_file = True
+
+            if is_article_file:
+                changed_files.append(file.filename)
+                print(f"    ✅ Added for review: {file.filename}")
+            else:
+                print(f"    ⏭️  Skipped: {file.filename}")
+
+        print(f"📝 Total files selected for review: {len(changed_files)}")
         return changed_files
 
     def extract_article_content(self, file_path: str) -> Dict[str, Any]:
@@ -374,10 +420,19 @@ class ArticleReviewer:
         """Check if article follows the repository guidelines."""
         compliance_issues = []
 
-        # Check if it's in a proper article directory
-        if not file_path.startswith("article-"):
+        # More flexible check for article directory structure
+        filename_lower = file_path.lower()
+        in_article_directory = (
+            filename_lower.startswith("article-")
+            or filename_lower.startswith("article_")
+            or "/article" in filename_lower
+            or any("article" in part for part in file_path.split("/"))
+        )
+
+        if not in_article_directory and file_path.endswith(".md"):
             compliance_issues.append(
-                "Article should be in a directory named 'article-<topic>'"
+                "Article should be in a directory named 'article-<topic>' or 'article_<topic>', "
+                "or have 'article' in the directory/filename"
             )
 
         # Check for README.md in the same directory
@@ -389,8 +444,10 @@ class ArticleReviewer:
         readme_path = os.path.join(article_dir, "README.md")
         # Ensure we're not checking if the file itself is README.md
         file_name = os.path.basename(file_path)
-        if file_name != "README.md" and not os.path.exists(readme_path):
-            compliance_issues.append("Missing README.md file in article directory")
+        if file_name.lower() != "readme.md" and not os.path.exists(readme_path):
+            # Only warn about missing README for files in subdirectories
+            if article_dir != ".":
+                compliance_issues.append("Missing README.md file in article directory")
 
         # Check for src directory if code is included
         src_path = os.path.join(article_dir, "src")

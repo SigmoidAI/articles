@@ -4,7 +4,11 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, labeled]
     paths:
-      - 'article-*/**'
+      - 'article-*/**'      # Standard dash-based article directories
+      - 'article_*/**'      # Underscore-based article directories  
+      - '**/article*.md'    # Any markdown file with 'article' in name
+      - '**/Article*.md'    # Capitalized variants
+      - '**/*article*.md'   # Files containing 'article' anywhere in name
   issue_comment:
     types: [created]
 
