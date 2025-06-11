@@ -42,12 +42,70 @@ class ArticleReviewer:
     """Main class for AI-powered article review."""
 
     def __init__(self):
+        # Validate required environment variables
+        self._validate_environment_variables()
+
         self.openai_client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
         self.github_client = Github(os.environ.get("GITHUB_TOKEN"))
         self.pr_number = int(os.environ.get("PR_NUMBER"))
         self.repository_name = os.environ.get("REPOSITORY")
         self.repo = self.github_client.get_repo(self.repository_name)
         self.criteria = ReviewCriteria()
+
+    def _validate_environment_variables(self):
+        """Validate that all required environment variables are present and valid."""
+        errors = []
+
+        # Check OPENAI_API_KEY
+        openai_key = os.environ.get("OPENAI_API_KEY")
+        if not openai_key:
+            errors.append("OPENAI_API_KEY environment variable is required but not set")
+        elif not openai_key.strip():
+            errors.append("OPENAI_API_KEY environment variable is empty")
+
+        # Check GITHUB_TOKEN
+        github_token = os.environ.get("GITHUB_TOKEN")
+        if not github_token:
+            errors.append("GITHUB_TOKEN environment variable is required but not set")
+        elif not github_token.strip():
+            errors.append("GITHUB_TOKEN environment variable is empty")
+
+        # Check PR_NUMBER
+        pr_number_str = os.environ.get("PR_NUMBER")
+        if not pr_number_str:
+            errors.append("PR_NUMBER environment variable is required but not set")
+        else:
+            try:
+                pr_number = int(pr_number_str)
+                if pr_number <= 0:
+                    errors.append("PR_NUMBER must be a positive integer")
+            except ValueError:
+                errors.append(
+                    f"PR_NUMBER must be a valid integer, got: '{pr_number_str}'"
+                )
+
+        # Check REPOSITORY
+        repository = os.environ.get("REPOSITORY")
+        if not repository:
+            errors.append("REPOSITORY environment variable is required but not set")
+        elif not repository.strip():
+            errors.append("REPOSITORY environment variable is empty")
+        elif "/" not in repository:
+            errors.append(
+                f"REPOSITORY must be in format 'owner/repo', got: '{repository}'"
+            )
+
+        # If there are validation errors, print them and exit
+        if errors:
+            print("❌ Environment variable validation failed:")
+            for error in errors:
+                print(f"  - {error}")
+            print("\nRequired environment variables:")
+            print("  - OPENAI_API_KEY: Your OpenAI API key")
+            print("  - GITHUB_TOKEN: GitHub personal access token or workflow token")
+            print("  - PR_NUMBER: Pull request number (positive integer)")
+            print("  - REPOSITORY: Repository name in format 'owner/repo'")
+            sys.exit(1)
 
     def get_changed_files(self) -> List[str]:
         """Get list of changed files in the PR."""
