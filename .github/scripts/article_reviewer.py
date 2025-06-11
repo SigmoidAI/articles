@@ -172,24 +172,45 @@ class ArticleReviewer:
             return None
 
     def _extract_json_from_text(self, text: str) -> Optional[Dict[str, Any]]:
-        """Extract JSON object from text using proper bracket counting."""
+        """Extract JSON object from text using proper bracket counting that accounts for string literals."""
         # Find the first opening brace
         start_idx = text.find("{")
         if start_idx == -1:
             return None
 
-        # Count braces to find the matching closing brace
+        # Count braces to find the matching closing brace, accounting for string literals
         brace_count = 0
         end_idx = start_idx
+        in_string = False
+        escape_next = False
 
         for i in range(start_idx, len(text)):
-            if text[i] == "{":
-                brace_count += 1
-            elif text[i] == "}":
-                brace_count -= 1
-                if brace_count == 0:
-                    end_idx = i
-                    break
+            char = text[i]
+
+            if escape_next:
+                # Skip this character as it's escaped
+                escape_next = False
+                continue
+
+            if char == "\\" and in_string:
+                # Next character is escaped
+                escape_next = True
+                continue
+
+            if char == '"' and not escape_next:
+                # Toggle string state
+                in_string = not in_string
+                continue
+
+            # Only count braces when not inside a string literal
+            if not in_string:
+                if char == "{":
+                    brace_count += 1
+                elif char == "}":
+                    brace_count -= 1
+                    if brace_count == 0:
+                        end_idx = i
+                        break
 
         if brace_count != 0:
             return None
