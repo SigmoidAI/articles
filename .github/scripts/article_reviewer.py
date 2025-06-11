@@ -156,6 +156,36 @@ class ArticleReviewer:
             print(f"Error extracting content from {file_path}: {e}")
             return None
 
+    def _extract_json_from_text(self, text: str) -> Optional[Dict[str, Any]]:
+        """Extract JSON object from text using proper bracket counting."""
+        # Find the first opening brace
+        start_idx = text.find("{")
+        if start_idx == -1:
+            return None
+
+        # Count braces to find the matching closing brace
+        brace_count = 0
+        end_idx = start_idx
+
+        for i in range(start_idx, len(text)):
+            if text[i] == "{":
+                brace_count += 1
+            elif text[i] == "}":
+                brace_count -= 1
+                if brace_count == 0:
+                    end_idx = i
+                    break
+
+        if brace_count != 0:
+            return None
+
+        # Extract and parse JSON
+        json_str = text[start_idx : end_idx + 1]
+        try:
+            return json.loads(json_str)
+        except json.JSONDecodeError:
+            return None
+
     def analyze_with_ai(self, article_data: Dict[str, Any]) -> Dict[str, Any]:
         """Use OpenAI to analyze the article content."""
 
@@ -244,10 +274,9 @@ class ArticleReviewer:
             # Parse the JSON response
             review_text = response.choices[0].message.content
 
-            # Extract JSON from the response
-            json_match = re.search(r"\{.*\}", review_text, re.DOTALL)
-            if json_match:
-                review_data = json.loads(json_match.group())
+            # Extract JSON from the response using bracket counting
+            review_data = self._extract_json_from_text(review_text)
+            if review_data:
                 return review_data
             else:
                 # Fallback if JSON parsing fails
