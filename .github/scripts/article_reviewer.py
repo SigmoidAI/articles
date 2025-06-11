@@ -361,8 +361,14 @@ class ArticleReviewer:
 
         # Check for README.md in the same directory
         article_dir = os.path.dirname(file_path)
+        # Handle root-level files where dirname returns empty string
+        if not article_dir:
+            article_dir = "."
+
         readme_path = os.path.join(article_dir, "README.md")
-        if not os.path.exists(readme_path):
+        # Ensure we're not checking if the file itself is README.md
+        file_name = os.path.basename(file_path)
+        if file_name != "README.md" and not os.path.exists(readme_path):
             compliance_issues.append("Missing README.md file in article directory")
 
         # Check for src directory if code is included
